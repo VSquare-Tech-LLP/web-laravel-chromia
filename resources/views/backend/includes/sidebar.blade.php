@@ -28,6 +28,25 @@
             />
 
             <ul class="c-sidebar-nav-dropdown-items">
+                @can('post_menu')
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.posts.create')"
+                            icon="c-sidebar-nav-icon cil-pencil"
+                            class="c-sidebar-nav-link"
+                            :text="__('Write Post')"
+                            :permission="'post_create'"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.posts.index')"
+                            icon="c-sidebar-nav-icon cil-list"
+                            class="c-sidebar-nav-link {{ activeClass(Route::is('admin.posts.*'), 'c-active') }}"
+                            :text="__('All Posts')"
+                            :permission="'post_access'"/>
+                    </li>
+                @endcan
+
                 @can('category_menu')
                     <li class="c-sidebar-nav-item">
                         <x-utils.link
@@ -51,6 +70,17 @@
                 @endcan
             </ul>
         </li>
+
+        @can('page_menu')
+            <li class="c-sidebar-nav-item">
+                <x-utils.link
+                    class="c-sidebar-nav-link {{ activeClass(Route::is('admin.pages.*'), 'c-active') }}"
+                    :href="route('admin.pages.index')"
+                    :active="activeClass(Route::is('admin.pages.index'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-hamburger-menu"
+                    :text="__('Pages')"/>
+            </li>
+        @endcan
 
         @if (
             $logged_in_user->hasAllAccess() ||

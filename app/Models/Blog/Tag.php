@@ -48,6 +48,16 @@ class Tag extends Model implements HasMedia
             ->singleFile();
     }
 
+    /*  This model relationship methods start */
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class);
+    }
+    /*  This model relationship methods end */
+
+
+    /*  This model scope methods start */
     /**
      * @param $query
      * @param $term
@@ -59,4 +69,6 @@ class Tag extends Model implements HasMedia
             $query->where('name', 'like', '%' . $term . '%');
         });
     }
+
+    /*  This model scope methods end */
 }

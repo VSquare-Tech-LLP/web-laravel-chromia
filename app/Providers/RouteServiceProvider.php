@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Domains\Auth\Models\User;
+use App\Models\Blog\Post;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -60,6 +61,16 @@ class RouteServiceProvider extends ServiceProvider
         // To be able to restore a user, since the default binding is a find and would result in a 404
         Route::bind('deletedUser', function ($id) {
             return User::onlyTrashed()->find($id);
+        });
+
+        // To be able to edit  a post
+        Route::bind('post', function ($id) {
+            return Post::withoutGlobalScopes()->findOrFail($id);
+        });
+
+        // To be able to edit  a page
+        Route::bind('page', function ($id) {
+            return Post::withoutGlobalScopes()->findOrFail($id);
         });
     }
 

@@ -49,6 +49,8 @@ class Category extends Model implements HasMedia
             ->singleFile();
     }
 
+    /* This model relationship method start */
+
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive');
@@ -56,7 +58,7 @@ class Category extends Model implements HasMedia
 
     public function children()
     {
-        return $this->hasMany(self::class, 'parent_id')->nonEmpty();
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function parentRecursive()
@@ -69,6 +71,18 @@ class Category extends Model implements HasMedia
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class);
+    }
+
+    public function mainPosts()
+    {
+        return $this->hasMany(Post::class, 'main_category');
+    }
+    /* This model relationship method end */
+
+    /*  This model scope method start */
     /**
      * @param $query
      * @param $term
