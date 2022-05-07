@@ -93,6 +93,18 @@
             </li>
         @endcan
 
+        @can('redirects_menu')
+            <li class="c-sidebar-nav-item">
+                <x-utils.link
+                    class="c-sidebar-nav-link {{ activeClass(Route::is('admin.redirects.*'), 'c-active') }}"
+                    :href="route('admin.redirects.index')"
+                    :active="activeClass(Route::is('admin.redirects.index'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-link"
+                    :text="__('Redirects')"
+                    :permission="'redirects_access'"/>
+            </li>
+        @endcan
+
         @if (
             $logged_in_user->hasAllAccess() ||
             (

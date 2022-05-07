@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\Blog\PostController;
 use App\Http\Controllers\Backend\Blog\TagController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\PageController;
+use App\Http\Controllers\Backend\RedirectController;
 use Tabuna\Breadcrumbs\Trail;
 
 // All route names are prefixed with 'admin.'.
@@ -33,3 +34,6 @@ Route::resource('pages', PageController::class);
 
 // File manager route
 Route::get('file-manager', [DashboardController::class, 'getFileManager'])->name('file-manager');
+
+// Redirects route
+Route::resource('redirects', RedirectController::class);
