@@ -17,6 +17,7 @@
         "lab404/laravel-impersonate": "^1.6",
         "langleyfoxall/laravel-nist-password-rules": "dev-l9-compatibility",
         "laravel/framework": "^9.0",
+        "laravel/helpers": "^1.5",
         "laravel/sanctum": "^2.14.1",
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^2.7",
