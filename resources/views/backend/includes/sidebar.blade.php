@@ -82,6 +82,17 @@
             </li>
         @endcan
 
+        @can('file_manager_access')
+            <li class="c-sidebar-nav-item">
+                <x-utils.link
+                    class="c-sidebar-nav-link"
+                    :href="route('admin.file-manager')"
+                    :active="activeClass(Route::is('admin.file-manager'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-folder"
+                    :text="__('File Manager')" />
+            </li>
+        @endcan
+
         @if (
             $logged_in_user->hasAllAccess() ||
             (

@@ -29,3 +29,7 @@ Route::resource('posts', PostController::class);
 //===== Pages route =========//
 Route::get('preview/p/{slug}',[PageController::class,'pagePreview'])->name('page-preview');
 Route::resource('pages', PageController::class);
+
+
+// File manager route
+Route::get('file-manager', [DashboardController::class, 'getFileManager'])->name('file-manager');
