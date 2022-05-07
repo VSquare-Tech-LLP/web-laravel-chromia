@@ -117,6 +117,7 @@ class UserService extends BaseService
                 'type' => $data['type'],
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'username' => $data['username'],
                 'password' => $data['password'],
                 'email_verified_at' => isset($data['email_verified']) && $data['email_verified'] === '1' ? now() : null,
                 'active' => isset($data['active']) && $data['active'] === '1',
@@ -124,12 +125,12 @@ class UserService extends BaseService
 
             $user->syncRoles($data['roles'] ?? []);
 
-            if (! config('boilerplate.access.user.only_roles')) {
-                $user->syncPermissions($data['permissions'] ?? []);
-            }
+//            if (! config('boilerplate.access.user.only_roles')) {
+//                $user->syncPermissions($data['permissions'] ?? []);
+//            }
         } catch (Exception $e) {
             DB::rollBack();
-
+            dd($e);
             throw new GeneralException(__('There was a problem creating this user. Please try again.'));
         }
 
@@ -322,6 +323,7 @@ class UserService extends BaseService
         return $this->model::create([
             'type' => $data['type'] ?? $this->model::TYPE_USER,
             'name' => $data['name'] ?? null,
+            'username' => $data['username'] ?? null,
             'email' => $data['email'] ?? null,
             'password' => $data['password'] ?? null,
             'provider' => $data['provider'] ?? null,

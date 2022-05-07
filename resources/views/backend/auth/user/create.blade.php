@@ -37,6 +37,14 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
+                        <label for="username" class="col-md-2 col-form-label">@lang('User Name')</label>
+
+                        <div class="col-md-10">
+                            <input type="text" name="username" class="form-control" placeholder="{{ __('User Name') }}" value="{{ old('username') }}" maxlength="20" required />
+                        </div>
+                    </div><!--form-group-->
+
+                    <div class="form-group row">
                         <label for="email" class="col-md-2 col-form-label">@lang('E-mail Address')</label>
 
                         <div class="col-md-10">
