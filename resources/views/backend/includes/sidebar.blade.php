@@ -18,6 +18,29 @@
                 :text="__('Dashboard')" />
         </li>
 
+        <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('admin.posts.*') || Route::is('admin.categories.*') || Route::is('admin.tags.*'), 'c-open c-show') }}">
+            <x-utils.link
+                href="#"
+                icon="c-sidebar-nav-icon cil-newspaper"
+                class="c-sidebar-nav-dropdown-toggle"
+                :text="__('Blog')"
+                :permission="'blog_menu'"
+            />
+
+            <ul class="c-sidebar-nav-dropdown-items">
+                @can('category_menu')
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.categories.index')"
+                            icon="c-sidebar-nav-icon cil-stream"
+                            class="c-sidebar-nav-link {{ activeClass(Route::is('admin.categories.*'), 'c-active') }}"
+                            :text="__('Categories')"
+                            :permission="'category_access'"/>
+                    </li>
+                @endcan
+            </ul>
+        </li>
+
         @if (
             $logged_in_user->hasAllAccess() ||
             (
