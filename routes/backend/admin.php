@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Backend\Blog\CategoryController;
+use App\Http\Controllers\Backend\Blog\TagController;
 use App\Http\Controllers\Backend\DashboardController;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -16,3 +17,5 @@ Route::get('dashboard', [DashboardController::class, 'index'])
 
 // Categories route
 Route::resource('categories', CategoryController::class);
+// Tags route
+Route::resource('tags', TagController::class);

@@ -38,6 +38,17 @@
                             :permission="'category_access'"/>
                     </li>
                 @endcan
+
+                @can('tag_menu')
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.tags.index')"
+                            icon="c-sidebar-nav-icon cil-tag"
+                            class="c-sidebar-nav-link {{ activeClass(Route::is('admin.tags.*'), 'c-active') }}"
+                            :text="__('Tags')"
+                            :permission="'tag_access'"/>
+                    </li>
+                @endcan
             </ul>
         </li>
 
