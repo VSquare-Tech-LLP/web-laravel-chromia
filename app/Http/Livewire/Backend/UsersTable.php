@@ -23,7 +23,6 @@ class UsersTable extends DataTableComponent
      */
     public array $sortNames = [
         'email_verified_at' => 'Verified',
-        'two_factor_auth_count' => '2FA',
     ];
 
     /**
@@ -47,7 +46,7 @@ class UsersTable extends DataTableComponent
      */
     public function query(): Builder
     {
-        $query = User::with('roles', 'twoFactorAuth')->withCount('twoFactorAuth');
+        $query = User::with('roles');
 
         if ($this->status === 'deleted') {
             $query = $query->onlyTrashed();
@@ -104,8 +103,6 @@ class UsersTable extends DataTableComponent
             Column::make(__('E-mail'), 'email')
                 ->sortable(),
             Column::make(__('Verified'), 'email_verified_at')
-                ->sortable(),
-            Column::make(__('2FA'), 'two_factor_auth_count')
                 ->sortable(),
             Column::make(__('Roles')),
             Column::make(__('Additional Permissions')),

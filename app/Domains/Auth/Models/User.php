@@ -8,8 +8,6 @@ use App\Domains\Auth\Models\Traits\Relationship\UserRelationship;
 use App\Domains\Auth\Models\Traits\Scope\UserScope;
 use App\Domains\Auth\Notifications\Frontend\ResetPasswordNotification;
 use App\Domains\Auth\Notifications\Frontend\VerifyEmail;
-use DarkGhostHunter\Laraguard\Contracts\TwoFactorAuthenticatable;
-use DarkGhostHunter\Laraguard\TwoFactorAuthentication;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -24,7 +22,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * Class User.
  */
-class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens,
         HasFactory,
@@ -33,7 +31,6 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
         MustVerifyEmailTrait,
         Notifiable,
         SoftDeletes,
-        TwoFactorAuthentication,
         UserAttribute,
         UserMethod,
         UserRelationship,
@@ -44,7 +41,6 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -66,7 +62,6 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
 
     /**
      * The attributes that should be hidden for serialization.
-     *
      * @var array
      */
     protected $hidden = [
@@ -85,7 +80,6 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
 
     /**
      * The attributes that should be cast.
-     *
      * @var array
      */
     protected $casts = [
@@ -111,9 +105,17 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
     ];
 
     /**
+     * Create a new factory instance for the model.
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return UserFactory::new();
+    }
+
+    /**
      * Send the password reset notification.
-     *
-     * @param  string  $token
+     * @param string $token
      * @return void
      */
     public function sendPasswordResetNotification($token): void
@@ -131,7 +133,6 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
 
     /**
      * Return true or false if the user can impersonate an other user.
-     *
      * @param void
      * @return bool
      */
@@ -142,22 +143,11 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
 
     /**
      * Return true or false if the user can be impersonate.
-     *
      * @param void
      * @return bool
      */
     public function canBeImpersonated(): bool
     {
-        return ! $this->isMasterAdmin();
-    }
-
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
-    {
-        return UserFactory::new();
+        return !$this->isMasterAdmin();
     }
 }
