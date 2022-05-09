@@ -44,3 +44,8 @@ Route::resource('redirects', RedirectController::class);
 Route::resource('forms', FormController::class)->only(['index','create','store','edit','update','destroy']);
 //===== Form Submissions =====//
 Route::resource('form-submission', FormSubmissionController::class)->only(['index','store','destroy']);
+
+
+//====== Robots.txt route ===========//
+Route::get('robots-file-read', [DashboardController::class, 'robotsFileRead'])->name('robots_file_read');
+Route::post('robots-file-write', [DashboardController::class, 'robotsFileWrite'])->name('robots_file_write');
