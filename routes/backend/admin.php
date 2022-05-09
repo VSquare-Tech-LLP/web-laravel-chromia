@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\Blog\CategoryController;
 use App\Http\Controllers\Backend\Blog\PostController;
 use App\Http\Controllers\Backend\Blog\TagController;
+use App\Http\Controllers\Backend\CommentController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\FormController;
 use App\Http\Controllers\Backend\FormSubmissionController;
@@ -19,7 +20,7 @@ Route::get('dashboard', [DashboardController::class, 'index'])
         $trail->push(__('Home'), route('admin.dashboard'));
     });
 
-// Blog related routes
+//====== Blog system routes start ===========//
 
 // Categories route
 Route::resource('categories', CategoryController::class);
@@ -33,6 +34,14 @@ Route::resource('posts', PostController::class);
 //===== Pages route =========//
 Route::get('preview/p/{slug}',[PageController::class,'pagePreview'])->name('page-preview');
 Route::resource('pages', PageController::class);
+
+
+// Comment Route
+Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
+Route::get('comments/status/{comment}/{status}',[CommentController::class, 'status'])->name('comments.status');
+Route::get('comments/status/{comment}/{status}',[CommentController::class, 'status'])->name('comments.status');
+
+//====== Blog system routes end ===========//
 
 
 // File manager route

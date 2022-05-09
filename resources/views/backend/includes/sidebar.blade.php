@@ -82,6 +82,17 @@
             </li>
         @endcan
 
+        @can('comment_access')
+            <li class="c-sidebar-nav-item">
+                <x-utils.link
+                    class="c-sidebar-nav-link {{ activeClass(Route::is('admin.comments.*'), 'c-active') }}"
+                    :href="route('admin.comments.index',['sorts' => ['id' => 'desc']])"
+                    :active="activeClass(Route::is('admin.comments.index'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-comment-bubble"
+                    :text="__('Comments')"/>
+            </li>
+        @endcan
+
         @can('file_manager_access')
             <li class="c-sidebar-nav-item">
                 <x-utils.link
