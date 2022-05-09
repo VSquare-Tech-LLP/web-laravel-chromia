@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(AuthSeeder::class);
+        $this->call(HomePageSettingSeeder::class);
 
         Model::reguard();
     }
