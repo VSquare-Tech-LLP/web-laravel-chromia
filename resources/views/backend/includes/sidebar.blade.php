@@ -105,6 +105,17 @@
             </li>
         @endcan
 
+        @can('form_access')
+            <li class="c-sidebar-nav-item">
+                <x-utils.link
+                    class="c-sidebar-nav-link"
+                    :href="route('admin.forms.index',['sorts' => ['id' => 'desc']])"
+                    :active="activeClass(Route::is('admin.forms.index'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-folder"
+                    :text="__('Forms')" />
+            </li>
+        @endcan
+
         @if (
             $logged_in_user->hasAllAccess() ||
             (

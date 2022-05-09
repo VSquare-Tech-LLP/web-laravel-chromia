@@ -4,6 +4,8 @@ use App\Http\Controllers\Backend\Blog\CategoryController;
 use App\Http\Controllers\Backend\Blog\PostController;
 use App\Http\Controllers\Backend\Blog\TagController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\FormController;
+use App\Http\Controllers\Backend\FormSubmissionController;
 use App\Http\Controllers\Backend\PageController;
 use App\Http\Controllers\Backend\RedirectController;
 use Tabuna\Breadcrumbs\Trail;
@@ -37,3 +39,6 @@ Route::get('file-manager', [DashboardController::class, 'getFileManager'])->name
 
 // Redirects route
 Route::resource('redirects', RedirectController::class);
+
+//====== Form Routes ======//
+Route::resource('forms', FormController::class)->only(['index','create','store','edit','update','destroy']);
