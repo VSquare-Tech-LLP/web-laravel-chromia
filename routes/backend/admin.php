@@ -42,3 +42,5 @@ Route::resource('redirects', RedirectController::class);
 
 //====== Form Routes ======//
 Route::resource('forms', FormController::class)->only(['index','create','store','edit','update','destroy']);
+//===== Form Submissions =====//
+Route::resource('form-submission', FormSubmissionController::class)->only(['index','store','destroy']);
