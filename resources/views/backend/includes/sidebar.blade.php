@@ -206,6 +206,60 @@
             </li>
         @endif
 
+        @can('setting_menu')
+            <li class="c-sidebar-nav-dropdown {{ activeClass(Route::is('admin.settings.*'), 'c-open c-show') }}">
+                <x-utils.link
+                    class="c-sidebar-nav-dropdown-toggle"
+                    :active="activeClass(Route::is('admin.settings.index'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-cog"
+                    :text="__('Setting')" />
+                <ul class="c-sidebar-nav-dropdown-items">
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.general')"
+                            class="c-sidebar-nav-link"
+                            :text="__('General')"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.home-page')"
+                            class="c-sidebar-nav-link"
+                            :text="__('Home Page')"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.footer')"
+                            class="c-sidebar-nav-link"
+                            :text="__('Footer')"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.scripts')"
+                            class="c-sidebar-nav-link"
+                            :text="__('Header & Footer Scripts')"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.logo')"
+                            class="c-sidebar-nav-link"
+                            :text="__('Logo')"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.colors')"
+                            class="c-sidebar-nav-link"
+                            :text="__('Colors')"/>
+                    </li>
+                    <li class="c-sidebar-nav-item">
+                        <x-utils.link
+                            :href="route('admin.settings.cache')"
+                            class="c-sidebar-nav-link"
+                            :text="__('Cache')"/>
+                    </li>
+                </ul>
+            </li>
+        @endcan
+
         @can('robots_text_menu')
             <li class="c-sidebar-nav-item">
                 <x-utils.link

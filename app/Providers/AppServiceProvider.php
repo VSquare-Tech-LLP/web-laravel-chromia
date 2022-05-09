@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Option;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -28,5 +31,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
+
+        if (Schema::hasTable('options')) {
+            foreach (Option::all() as $setting) {
+                Config::set($setting->name, $setting->value);
+            }
+        }
     }
 }
