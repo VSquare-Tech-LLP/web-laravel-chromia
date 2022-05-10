@@ -14,10 +14,15 @@ const mix = require('laravel-mix');
 mix.setPublicPath('public')
     .setResourceRoot('../') // Turns assets paths in css relative to css file
     .vue()
-    .sass('resources/sass/frontend/app.scss', 'css/frontend.css')
-    .sass('resources/sass/backend/app.scss', 'css/backend.css')
-    .js('resources/js/frontend/app.js', 'js/frontend.js')
+    .js('resources/js/frontend/app.js', 'js/')
     .js('resources/js/backend/app.js', 'js/backend.js')
+    .sass('resources/sass/backend/app.scss', 'css/backend.css')
+    .sass('resources/sass/frontend/app.scss', 'css/')
+    .sass('resources/sass/frontend/homepage.scss', 'css/')
+    .sass('resources/sass/frontend/blog-page.scss', 'css/')
+    .sass('resources/sass/frontend/author-page.scss', 'css/')
+    .sass('resources/sass/frontend/single-category-page.scss', 'css/')
+    .sass('resources/sass/frontend/category-page.scss', 'css/')
     .extract([
         'alpinejs',
         'jquery',

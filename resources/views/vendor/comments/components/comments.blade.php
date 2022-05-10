@@ -10,7 +10,7 @@
     <div class="alert alert-warning">@lang('comments::comments.there_are_no_comments')</div>
 @endif
 
-<div>
+{{--<div>--}}
     @php
         $comments = $comments->sortBy('created_at');
 
@@ -52,7 +52,7 @@
             @endforeach
         @endif
     @endforeach
-</div>
+{{--</div>--}}
 
 @isset ($perPage)
     {{ $grouped_comments->links() }}
