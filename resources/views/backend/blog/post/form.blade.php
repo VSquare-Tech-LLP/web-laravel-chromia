@@ -167,8 +167,7 @@
                                                         name="categories[]"
                                                         id="categories[]"
                                                         value="{{ $sub_item->id }}"
-                                                    @if($post->id){{(in_array($item->id,$post->categories->pluck('id')->toArray()))?'checked=checked':""}} @endif>
-                                                    &nbsp;
+                                                    @if($post->id){{(in_array($sub_item->id,$post->categories->pluck('id')->toArray()))?'checked=checked':""}} @endif>
                                                     {{ $sub_item->name }}
                                                 </label>
                                             </div>
