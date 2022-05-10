@@ -30,8 +30,8 @@
         <a href="{{ route('admin.comments.status',['status' => 1,'comment' => $row]) }}">@lang('comments::comments.approve')</a>
         @endif
         |
-        <a href="{{ route('comments.destroy', $row->getKey()) }}" onclick="event.preventDefault();document.getElementById('comment-delete-form-{{ $row->getKey() }}').submit();" >@lang('comments::comments.delete')</a>
-        <form id="comment-delete-form-{{ $row->getKey() }}" action="{{ route('comments.destroy', $row->getKey()) }}" method="POST" style="display: none;">
+        <a href="{{ route('admin.comments.destroy', ['comment' => $row->getKey()]) }}" onclick="event.preventDefault();document.getElementById('comment-delete-form-{{ $row->getKey() }}').submit();" >@lang('comments::comments.delete')</a>
+        <form id="comment-delete-form-{{ $row->getKey() }}" action="{{ route('admin.comments.destroy', ['comment' => $row->getKey()]) }}" method="POST" style="display: none;">
             @method('DELETE')
             @csrf
         </form>

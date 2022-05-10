@@ -40,6 +40,7 @@ Route::resource('pages', PageController::class);
 Route::get('comments', [CommentController::class, 'index'])->name('comments.index');
 Route::get('comments/status/{comment}/{status}',[CommentController::class, 'status'])->name('comments.status');
 Route::get('comments/status/{comment}/{status}',[CommentController::class, 'status'])->name('comments.status');
+Route::delete('comments/destroy/{comment}',[CommentController::class, 'destroy'])->name('comments.destroy');
 
 //====== Blog system routes end ===========//
 

@@ -31,4 +31,10 @@ class CommentController extends Controller
         $comment->save();
         return redirect()->back();
     }
+
+    public function destroy(Comment $comment)
+    {
+        $comment->delete();
+        return redirect()->back();
+    }
 }
