@@ -86,7 +86,7 @@
             <li class="c-sidebar-nav-item">
                 <x-utils.link
                     class="c-sidebar-nav-link {{ activeClass(Route::is('admin.comments.*'), 'c-active') }}"
-                    :href="route('admin.comments.index',['sorts' => ['id' => 'desc']])"
+                    :href="route('admin.comments.index')"
                     :active="activeClass(Route::is('admin.comments.index'), 'c-active')"
                     icon="c-sidebar-nav-icon cil-comment-bubble"
                     :text="__('Comments')"/>
