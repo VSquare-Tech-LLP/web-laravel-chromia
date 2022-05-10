@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.0.2",
         "arcanedev/log-viewer": "^9.0",
+        "efectn/laravel-menu-builder": "^1.5",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "jamesmills/laravel-timezone": "^1.9",
