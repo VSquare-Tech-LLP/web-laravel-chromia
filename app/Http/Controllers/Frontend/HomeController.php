@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Domains\Auth\Models\User;
 use App\Models\Blog\Category;
 use App\Models\Blog\Post;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -83,5 +84,19 @@ class HomeController
         $categories = Category::with(['children','parent'])->get();
         $topCategories = $categories->whereNull('parent_id');
         return view('frontend.categories',compact('categories','topCategories'));
+    }
+
+    public function search(Request $request)
+    {
+        $search_term = $request->get('q');
+        if ($search_term) {
+            $posts = Post::where('title', 'like', '%'.$search_term.'%')
+                ->paginate(6)->withQueryString();
+            $categories = Category::where('name', 'like', '%'.$search_term.'%')
+                ->paginate(6)->withQueryString();
+
+            return view('frontend.search-page', compact('search_term', 'categories', 'posts'));
+        }
+        abort(404);
     }
 }
