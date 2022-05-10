@@ -140,6 +140,10 @@ class Post extends Model implements HasMedia
         return $media[0]->getUrl();
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
     /*  This model relationship method end */
 
 
@@ -175,16 +179,17 @@ class Post extends Model implements HasMedia
         }
     }
 
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class);
-    }
-
     public function getPostStatusAttribute()
     {
         $status = ['0' => 'Drafted', '1' => 'Published'];
 
         return $status[$this->published_status];
+    }
+
+    public function getMetaAttribute()
+    {
+        $meta = json_decode($this->extras);
+        return $meta;
     }
     /*  This model attributes method end */
 

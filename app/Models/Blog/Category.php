@@ -12,7 +12,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Category extends Model implements HasMedia
 {
-    use InteractsWithMedia,HasFactory,SoftDeletes,HasSlug;
+    use InteractsWithMedia, HasFactory, SoftDeletes, HasSlug;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +47,27 @@ class Category extends Model implements HasMedia
         $this
             ->addMediaCollection('category_image')
             ->singleFile();
+    }
+
+    public function getBreadCrumbLinks($current)
+    {
+        if ($this->parent) {
+            if ($this->id == $current->id) {
+                $link = '<li class="breadcrumb-item active"><span>' . $this->name . '</span></li>';
+            } else {
+                $link = '<li class="breadcrumb-item">
+<a href="' . route('frontend.single-category', ['slug' => $this->slug]) . '">' . $this->name . '</a></li>';
+            }
+            return $this->parent->getBreadCrumbLinks($current) . $link;
+        } else {
+            if ($this->id == $current->id) {
+                $link = '<li class="breadcrumb-item active"><span>' . $this->name . '</span></li>';
+            } else {
+                $link = '<li class="breadcrumb-item">
+<a href="' . route('frontend.single-category', ['slug' => $this->slug]) . '">' . $this->name . '</a></li>';
+            }
+            return $link;
+        }
     }
 
     /* This model relationship method start */
@@ -86,13 +107,13 @@ class Category extends Model implements HasMedia
     /**
      * @param $query
      * @param $term
-     *
      * @return mixed
      */
     public function scopeSearch($query, $term)
     {
         return $query->where(function ($query) use ($term) {
-            $query->where('name', 'like', '%'.$term.'%');
+            $query->where('name', 'like', '%' . $term . '%');
         });
     }
+    /*  This model scope method end */
 }
