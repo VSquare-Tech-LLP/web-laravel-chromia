@@ -36,4 +36,13 @@ class Form extends Model
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function formSubmission()
+    {
+        return $this->hasMany(FormSubmission::class);
+    }
 }

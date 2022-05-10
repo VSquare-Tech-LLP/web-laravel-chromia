@@ -17,4 +17,13 @@ class FormSubmission extends Model
         'form_id',
         'form_data'
     ];
+
+    /**
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
 }
