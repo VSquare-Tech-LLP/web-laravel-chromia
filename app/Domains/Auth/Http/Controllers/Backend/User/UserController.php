@@ -10,6 +10,8 @@ use App\Domains\Auth\Models\User;
 use App\Domains\Auth\Services\PermissionService;
 use App\Domains\Auth\Services\RoleService;
 use App\Domains\Auth\Services\UserService;
+use App\Models\UserMeta;
+use Illuminate\Http\Request;
 
 /**
  * Class UserController.
@@ -129,5 +131,46 @@ class UserController
         $this->userService->delete($user);
 
         return redirect()->route('admin.auth.user.deleted')->withFlashSuccess(__('The user was successfully deleted.'));
+    }
+
+    public function profile(User $user)
+    {
+        $userMetas = optional();
+        if ($user->userMeta()->exists()) {
+            $userMetas = $user->userMeta;
+        }
+
+        return view('backend.auth.user.profile', compact('user', 'userMetas'));
+    }
+
+    public function postProfile(Request $request, User $user)
+    {
+        if (!file_exists(public_path('storage/profile'))) {
+            mkdir(public_path('storage/profile'), 0777);
+        }
+
+        $userMeta = UserMeta::updateOrCreate(
+            [
+                'user_id' => $user->id,
+            ],
+            [
+                'short_bio' => $request->short_bio,
+                'long_bio' => $request->long_bio,
+            ]
+        );
+
+        if ($request->has('image')) {
+            if ($userMeta->image && file_exists(public_path('storage/profile/' . $userMeta->image))) {
+                unlink(public_path('storage/profile/' . $userMeta->image));
+            }
+            $extension = array_last(explode('.', $request->file('image')->getClientOriginalName()));
+            $name = array_first(explode('.', $request->file('image')->getClientOriginalName()));
+            $filename = str_slug($user->name) . '-' . str_slug($name) . '.' . $extension;
+            $request->file('image')->move(public_path('storage/profile'), $filename);
+            $userMeta->image = $filename;
+            $userMeta->save();
+        }
+
+        return redirect()->back()->withFlashSuccess('Profile updated successfully');
     }
 }

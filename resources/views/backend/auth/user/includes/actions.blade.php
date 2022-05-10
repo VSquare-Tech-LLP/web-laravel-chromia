@@ -37,6 +37,16 @@
         <x-utils.delete-button :href="route('admin.auth.user.destroy', $user)" />
     @endif
 
+    @if($logged_in_user->hasAllAccess())
+        <x-utils.link
+            class="btn btn-success btn-sm"
+            href="{{ route('admin.user.profile',['user' => $user, 'back' => 'user-management']) }}"
+            icon="fas fa-user">
+            @lang('Edit Profile')
+        </x-utils.link>
+
+    @endif
+
     {{-- The logged in user is the master admin, and the row is the master admin. Only the master admin can do anything to themselves --}}
     @if ($user->isMasterAdmin() && $logged_in_user->isMasterAdmin())
         <div class="dropdown d-inline-block">

@@ -143,3 +143,6 @@ Route::group([
         });
     });
 });
+
+Route::get('user/{user}/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::post('user/{user}/profile', [UserController::class, 'postProfile'])->name('post.profile');
