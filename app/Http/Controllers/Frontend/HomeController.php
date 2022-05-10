@@ -99,4 +99,11 @@ class HomeController
         }
         abort(404);
     }
+
+    public function latestPosts()
+    {
+        $posts = Post::latest()->paginate(6);
+        $categories = Category::with('childrenRecursive')->get();
+        return view('frontend.latest-posts', compact('posts','categories'));
+    }
 }
