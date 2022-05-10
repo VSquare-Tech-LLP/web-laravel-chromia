@@ -2,12 +2,14 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
+$font-family-sans-serif: 'Open Sans',sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+$font-family-base : 'Open Sans',sans-serif;
+$headings-font-family : 'Open Sans',sans-serif;
 
 // Colors
-$blue: #3490dc;
+$blue: #1921ff;
 $indigo: #6574cd;
 $purple: #9561e2;
 $pink: #f66d9b;
@@ -17,3 +19,12 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+
+:root{
+    --primary-color: #1921ff;
+    --secondary-color: #f8fafc;
+    --footer-bg: #171717;
+    --link-color:#1921ff;
+    --font-color:#303030;
+    --link-hover-color:#1921ff;
+}

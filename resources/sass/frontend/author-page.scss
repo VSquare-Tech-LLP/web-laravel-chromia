@@ -1,0 +1,82 @@
+@import 'variables';
+section.hero-content {
+  background-color: var(--primary-color);
+  height: 450px;
+  padding-top: 3.125em;
+  .hero-title {
+    font-size: 2.375em;
+    font-weight: bold;
+    margin-bottom: 0.8em;
+    color: white;
+    margin-top: 0.5em;
+    vertical-align: middle;
+  }
+  .author-image{
+      border-radius: 50%;
+      -o-object-fit: contain;
+      object-fit: contain;
+      border: 2px solid #fff;
+      margin-right: 20px;
+  }
+  .hero-description {
+    color: white;
+    font-weight: bold;
+    text-align: justify;
+    line-height: 2em;
+  }
+}
+.content {
+  overflow: hidden;
+  .icon-left{
+    position: absolute;
+    left:0;
+    top:0;
+  }
+  .icon-right{
+    position: absolute;
+    right:0;
+    top:0;
+  }
+  .content-title{
+    font-weight: bold;
+    font-size:  1.875em;
+    text-align: center;
+    line-height: 1;
+    margin: 1.5625em;
+  }
+  .card {
+    border: none;
+    border-radius: 0.4375em;
+    margin-bottom: 1.875em;
+    .card-title {
+      font-weight: bold;
+      margin-bottom: 0px;
+      font-size: 1.25em;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  section.hero-content .hero-title{
+    font-size: 1.7em;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 1em;
+  }
+  section.hero-content .hero-description {
+    line-height: 1.5em;
+  }
+  .content .content-title{
+    margin: 1em 0.2em;
+  }
+  .content .icon-left {
+    position: absolute;
+    left: -30%;
+    top: -13%;
+  }
+  .content .icon-right {
+    position: absolute;
+    right: -30%;
+    top: 50%;
+  }
+}
