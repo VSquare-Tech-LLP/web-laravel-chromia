@@ -138,6 +138,17 @@
             </li>
         @endcan
 
+        @can('menu_manager_access')
+            <li class="c-sidebar-nav-item">
+                <x-utils.link
+                    class="c-sidebar-nav-link"
+                    :href="route('admin.menu-manager')"
+                    :active="activeClass(Route::is('admin.menu-manager'), 'c-active')"
+                    icon="c-sidebar-nav-icon cil-list-rich"
+                    :text="__('Menu Manager')" />
+            </li>
+        @endcan
+
         @if (
             $logged_in_user->hasAllAccess() ||
             (

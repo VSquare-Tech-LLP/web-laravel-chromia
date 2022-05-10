@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\CommentController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\FormController;
 use App\Http\Controllers\Backend\FormSubmissionController;
+use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\OptionController;
 use App\Http\Controllers\Backend\PageController;
 use App\Http\Controllers\Backend\RedirectController;
@@ -56,6 +57,21 @@ Route::resource('forms', FormController::class)->only(['index','create','store',
 //===== Form Submissions =====//
 Route::resource('form-submission', FormSubmissionController::class)->only(['index','store','destroy']);
 
+//Menu Manager Route
+Route::get('menu-manager', [MenuController::class,'index'])->name('menu-manager');
+Route::group(['middleware' => config('menu.middleware')], function () {
+
+    Route::post('create-new-menu', [MenuController::class, 'createNewMenu'])->name('hcreateNewMenu');
+    Route::post('delete-menug', [MenuController::class,'deleteMenu'])->name('hdeleteMenu');
+
+    Route::post('add-custom-menu', [MenuController::class,'addCustomMenu'])->name('haddCustomMenu');
+    Route::post('save-custom-menu', [MenuController::class,'saveCustomItem'])->name('hsaveCustomItem');
+    Route::post('delete-item-menu', [MenuController::class,'deleteItemMenu'])->name('hdeleteItemMenu');
+    Route::post('update-item', [MenuController::class,'updateItem'])->name('hupdateItem');
+    Route::post('deletemenug', [MenuController::class,'deletemenug'])->name('hdeletemenug');
+    Route::post('generate-menu-control', [MenuController::class,'generateMenuControl'])->name('hgenerateMenuControl');
+    Route::post('update-menu-order', [MenuController::class,'updateMenuOrder'])->name('updateMenuOrder');
+});
 
 
 //====== Settings route ===========//
