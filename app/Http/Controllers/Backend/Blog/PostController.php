@@ -89,6 +89,8 @@ class PostController extends Controller
             ]);
         }
         $validatedData['published_status'] = $request->action == 'Draft' ? 0 : 1;
+        $validatedData['display_published_at'] = Carbon::now();
+        $validatedData['published_at'] = Carbon::now();
         unset($validatedData['categories']);
         unset($validatedData['tags']);
         unset($validatedData['feature_image']);

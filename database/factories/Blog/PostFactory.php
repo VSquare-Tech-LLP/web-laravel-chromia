@@ -5,6 +5,7 @@ namespace Database\Factories\Blog;
 use App\Models\Blog\Category;
 use App\Models\Blog\Post;
 use App\Models\Blog\Tag;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -29,14 +30,16 @@ class PostFactory extends Factory
         return [
 	        'title' => $post_title,
 	        'slug' => Str::slug($post_title),
-	        'body' => $this->faker->randomHtml(2,3),
+	        'body' => $this->faker->text(2000),
 	        'user_id' => 2,
-	        'meta_title'=>$post_title,
-	        'meta_description'=>$this->faker->sentence($nbWords = 8),
+	        'meta_title'=> $post_title,
+	        'meta_description'=> $this->faker->sentence($nbWords = 8),
 	        'is_featured'=>rand(0,1),
 	        'main_category'=> Category::all()->random()->id,
-	        'excerpt'=>$this->faker->sentence($nbWords = 6),
-	        'published_status'=> 0,
+	        'excerpt'=> $this->faker->sentence($nbWords = 6),
+	        'published_status'=> 1,
+	        'display_published_at'=> Carbon::now(),
+	        'published_at'=> Carbon::now(),
             'type' => '0'
         ];
 
