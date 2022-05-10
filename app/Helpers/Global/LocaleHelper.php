@@ -81,3 +81,26 @@ if (! function_exists('getLocaleName')) {
         return config('boilerplate.locale.languages')[$locale]['name'];
     }
 }
+
+if (!function_exists('getStandardLocaleName')) {
+    function getStandardLocaleName($locale)
+    {
+        $lang = [
+            'en' => 'en_US',
+            'it' => 'it_IT',
+            'jp' => 'ja_JP',
+            'de' => 'de_DE',
+            'es' => 'es_ES',
+            'fr' => 'fr_FR',
+            'pt' => 'pt_BR',
+            'pl' => 'pl_PL',
+            'nl' => 'nl_NL',
+        ];
+        if (isset($lang[$locale])) {
+            return $lang[$locale];
+        } else {
+            return $locale;
+        }
+
+    }
+}
