@@ -48,9 +48,9 @@
             <div class="col-lg-4 col-12">
                 @if($menus->count())
                     <div class="footer-menu">
-                        <div class="menu-title"> {{config('footer.important_links_section_title') ?? __('common.important_links')}}</div>
+                        <div class="menu-title"> {{config('footer.important_links_section_title') ?? 'Important Links'}}</div>
                         <ul class="nav">
-                            @foreach($menus->where('menu',2) as $menu)
+                            @foreach($menus->where('menu_id',2) as $menu)
                                 <li class="nav-item">
                                     <a href="{{ url(menuUrl($menu)) }}"
                                        class="nav-link"
