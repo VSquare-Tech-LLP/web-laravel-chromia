@@ -13,28 +13,28 @@
         "arcanedev/log-viewer": "^9.0",
         "efectn/laravel-menu-builder": "^1.5",
         "fruitcake/laravel-cors": "^3.0",
-        "guzzlehttp/guzzle": "^7.2",
-        "jamesmills/laravel-timezone": "^1.9",
-        "lab404/laravel-impersonate": "^1.6",
-        "langleyfoxall/laravel-nist-password-rules": "dev-l9-compatibility",
-        "laravel/framework": "^9.0",
+        "guzzlehttp/guzzle": "^7.5.0",
+        "jamesmills/laravel-timezone": "^1.11",
+        "lab404/laravel-impersonate": "^1.7.3",
+        "langleyfoxall/laravel-nist-password-rules": "^6.0",
+        "laravel/framework": "^9.19",
         "laravel/helpers": "^1.5",
         "laravel/sanctum": "^2.14.1",
-        "laravel/socialite": "^5.0",
+        "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7",
-        "laravel/ui": "^3.0",
+        "laravel/ui": "^4.0",
         "laravelista/comments": "dev-master",
-        "livewire/livewire": "^2.0",
+        "livewire/livewire": "^2.10",
         "rappasoft/laravel-livewire-tables": "^1.0",
         "rappasoft/lockout": "^4.0",
-        "spatie/laravel-activitylog": "^4.5",
-        "spatie/laravel-medialibrary": "^10.3",
+        "spatie/laravel-activitylog": "^4.7",
+        "spatie/laravel-medialibrary": "^10.7",
         "spatie/laravel-missing-page-redirector": "^2.9",
         "spatie/laravel-permission": "^5.5",
         "spatie/laravel-responsecache": "^7.2",
         "spatie/laravel-sluggable": "^3.4",
         "tabuna/breadcrumbs": "^3.0",
-        "unisharp/laravel-filemanager": "^2.4"
+        "unisharp/laravel-filemanager": "^2.5.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
@@ -46,8 +46,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.3.3",
-        "roave/security-advisories": "dev-master"
+        "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {
         "psr-4": {
@@ -105,7 +104,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "treeware/plant": false
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
