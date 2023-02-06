@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             'type' => User::TYPE_ADMIN,
             'username' => 'superadmin',
             'name' => 'Super Admin',
-            'email' => 'admin@admin.com',
+            'email' => 'admin@' . $expected_domain,
             'password' => 'secret',
             'email_verified_at' => now(),
             'active' => true,
