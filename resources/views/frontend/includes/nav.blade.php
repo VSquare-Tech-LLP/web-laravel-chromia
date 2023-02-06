@@ -26,73 +26,42 @@
                 :text="appName()"
                 class="navbar-brand mr-auto" />
         @endif
-        <a class="nav-link search-link ml-auto"
-           href="#searchForm"
-           data-target="#searchForm"
-           data-toggle="collapse"
-           aria-label="Search Button">
-            <svg viewBox="0 0 512 512" aria-hidden="true" role="img" version="1.1"
-                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1em"
-                 height="1em">
-                <path fill-rule="evenodd" clip-rule="evenodd"
-                      d="M208 48c-88.366 0-160 71.634-160 160s71.634 160 160 160 160-71.634 160-160S296.366 48 208 48zM0 208C0 93.125 93.125 0 208 0s208 93.125 208 208c0 48.741-16.765 93.566-44.843 129.024l133.826 134.018c9.366 9.379 9.355 24.575-.025 33.941-9.379 9.366-24.575 9.355-33.941-.025L337.238 370.987C301.747 399.167 256.839 416 208 416 93.125 416 0 322.875 0 208z"></path>
-            </svg>
-        </a>
 
 
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto mr-lg-4">
-                @if($menus->count())
-                    @foreach($menus->where('menu_id',1) as $menu)
-                        @if($menu->id == $menu->parent_id)
-                            @if($menu->getsons($menu->id)->count() > 1)
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="{{ url(menuUrl($menu)) }}"
-                                       id="navbarDropdownMenuLink"  aria-haspopup="true"
-                                       aria-expanded="false">
-                                        {{$menu->label}}
-                                    </a>
-                                    <ul class="dropdown-menu main" aria-labelledby="navbarDropdownMenuLink">
-                                        @foreach($menu->getsons($menu->id) as $item)
-                                            @if($menu->id != $item->id)
-                                                @include('frontend.includes.partials.nav-dropdown', $item)
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            @else
-                                <li class="nav-item">
-                                    <a href="{{ url(menuUrl($menu)) }}"
-                                       class="nav-link"
-                                       id="menu-{{$menu->id}}">{{ $menu->label }}</a>
-                                </li>
+                @guest
+                    @if (Route::has('frontend.auth.login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('frontend.auth.login') }}">{{ __('Login') }}</a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}"> Dashboard </a>
+                            @if(env('API_PLAYGROUND'))
+                                <a class="dropdown-item" href="{{ route('playground') }}"> Playground </a>
                             @endif
-                        @endif
-                    @endforeach
-                @endif
+                            <a class="dropdown-item" href="{{ route('frontend.auth.logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('frontend.auth.logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @endguest
             </ul>
         </div><!--navbar-collapse-->
-        <ul class="navbar-nav">
-            <li class="nav-item d-flex">
-                <div class="collapse position-absolute w-100 px-2" id="searchForm">
-                    <div class="d-flex search-wrapper shadow-sm align-items-center">
-                        <input id="nav-search" type="text" class="form-control form-control-lg  border-0 flex-grow-1" name="q" placeholder="{{config('search_box_label','Search Here')}}" />
-                        <a class="nav-link py-2"
-                           href="#searchForm"
-                           data-target="#searchForm"
-                           data-toggle="collapse">
-                            <svg viewBox="0 0 512 512" aria-hidden="true" role="img" version="1.1"
-                                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1em"
-                                 height="1em">
-                                <path
-                                    d="M71.029 71.029c9.373-9.372 24.569-9.372 33.942 0L256 222.059l151.029-151.03c9.373-9.372 24.569-9.372 33.942 0 9.372 9.373 9.372 24.569 0 33.942L289.941 256l151.03 151.029c9.372 9.373 9.372 24.569 0 33.942-9.373 9.372-24.569 9.372-33.942 0L256 289.941l-151.029 151.03c-9.373 9.372-24.569 9.372-33.942 0-9.372-9.373-9.372-24.569 0-33.942L222.059 256 71.029 104.971c-9.372-9.373-9.372-24.569 0-33.942z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </li>
-        </ul>
     </div><!--container-->
 </nav>
 

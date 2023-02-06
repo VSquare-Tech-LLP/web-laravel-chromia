@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container py-4">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center vh-100">
             <div class="col-md-8">
                 <x-frontend.card>
                     <x-slot name="header">

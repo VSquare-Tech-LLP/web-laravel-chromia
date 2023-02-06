@@ -18,14 +18,4 @@ trait UserRelationship
     {
         return $this->morphMany(PasswordHistory::class, 'model');
     }
-
-    public function userMeta()
-    {
-        return $this->hasOne(UserMeta::class, 'user_id');
-    }
-
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'user_id');
-    }
 }

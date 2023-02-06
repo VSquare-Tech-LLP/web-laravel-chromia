@@ -26,9 +26,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(AuthSeeder::class);
-        $this->call(HomePageSettingSeeder::class);
-        $this->call(MenuSeeder::class);
-
         Model::reguard();
     }
 }

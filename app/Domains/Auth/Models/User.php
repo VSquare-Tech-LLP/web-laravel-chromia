@@ -17,7 +17,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Sanctum\HasApiTokens;
-use Laravelista\Comments\Commenter;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -25,8 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use Commenter,
-        HasApiTokens,
+    use HasApiTokens,
         HasFactory,
         HasRoles,
         Impersonate,
