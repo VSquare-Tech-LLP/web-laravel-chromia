@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
             'username' => 'superadmin',
             'name' => 'Super Admin',
             'email' => 'admin@' . $expected_domain,
-            'password' => 'secret',
+            'password' => $expected_password,
             'email_verified_at' => now(),
             'active' => true,
         ]);
