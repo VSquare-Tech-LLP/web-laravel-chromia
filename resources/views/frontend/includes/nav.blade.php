@@ -45,9 +45,6 @@
 
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('admin.dashboard') }}"> Dashboard </a>
-                            @if(env('API_PLAYGROUND'))
-                                <a class="dropdown-item" href="{{ route('playground') }}"> Playground </a>
-                            @endif
                             <a class="dropdown-item" href="{{ route('frontend.auth.logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -67,22 +64,6 @@
 
 @push('after-scripts')
     <script>
-        $('#nav-search').keydown(function(event) {
-            // enter has keyCode = 13
-            if (event.keyCode == 13) {
-                var sstr = $('#nav-search').val().replace(/ /g, '+');
-                window.location.href = "{{route('frontend.search')}}?q="+sstr;
-                return false;
-            }
-        });
-        $('#footer-search').keydown(function(event) {
-            // enter has keyCode = 13
-            if (event.keyCode == 13) {
-                var sstr = $('#footer-search').val().replace(/ /g, '+');
-                window.location.href = "{{route('frontend.search')}}?q="+sstr;
-                return false;
-            }
-        });
         $(".btn-group, .dropdown").hover(
             function () {
                 $('>.dropdown-menu', this).stop(true, true).fadeIn("fast");
