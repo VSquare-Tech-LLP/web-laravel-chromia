@@ -30,29 +30,6 @@ a{
     }
 }
 
-.search-link{
-    position: absolute;
-    right: 0;
-    top:0;
-}
-
-#searchForm {
-    z-index: 2210;
-    left: 0;
-    top: -4px;
-    .nav-link {
-        height: calc(2em + 1em + 2px);
-        line-height: 2;
-        background-color: var(--primary-color);
-        z-index: 10;
-    }
-}
-
-input, input:hover, input:focus, select, select:hover, select:focus, .form-control:focus {
-    outline: none;
-    box-shadow: none;
-}
-
 nav {
     background-color: var(--primary-color);
     color: white;
@@ -104,7 +81,6 @@ nav {
 }
 
 .footer {
-
     background-color: var(--footer-bg);
     padding: 1.875em;
     color: white;
@@ -116,36 +92,6 @@ nav {
     .logo-wrapper{
         &:hover{
             opacity: 1;
-        }
-    }
-    input{
-        outline: none;
-        border-radius: 0.4375em;
-        color: white;
-        border: none;
-        height: 42px;
-        padding-right: 2.5em;
-        font-weight: 500;
-        background-color: #484848;
-    }
-    input::placeholder {
-        color: white !important;
-    }
-
-    input:-ms-input-placeholder {
-        color: white !important;
-    }
-
-    input::-ms-input-placeholder {
-        color: white !important;
-    }
-    .search-icon{
-        position: absolute;
-        right: 25px;
-        top: 8px;
-
-        svg{
-            fill: white;
         }
     }
     .footer-menu{
@@ -172,7 +118,7 @@ footer{
     color: white;
     background-color: black;
 }
-@media screen and(max-width: 768px) {
+@media screen and (max-width: 768px) {
     .navbar {
         padding: 0.5rem 0rem;
     }
@@ -185,56 +131,4 @@ footer{
         color: white;
     }
 
-}
-
-.pagination{
-    gap:0.5rem;
-}
-.page-numbers {
-    display: inline-block;
-    padding: 8px 12px;
-    margin: 0 2px 0 0;
-    border: 1px solid #eee;
-    line-height: 1;
-    text-decoration: none;
-    border-radius: 2px;
-    font-weight: 600;
-}
-
-.page-numbers.current,
-a.page-numbers:hover {
-    background: #f9f9f9;
-    color: white !important;
-}
-
-.prev.page-numbers, .next.page-numbers {
-    background-color: #e2e6ef !important;
-    color: var(--font-color);
-    border-radius: 10px;
-}
-
-.page-numbers {
-    border-radius: 10px;
-    border: 2px solid #e2e6ef;
-    min-height: 48px;
-    min-width: 48px;
-    padding: 0px;
-    line-height: 48px;
-}
-
-.paging-navigation a, .paging-navigation a:visited {
-    color: var(--font-color);
-    text-decoration: none;
-
-}
-
-.page-numbers.current, a.page-numbers:hover {
-    background-color: white;
-    color: var(--primary-color)!important;
-    border: 2px solid white;
-    text-decoration: none;
-}
-.page-numbers svg{
-    height: 1em;
-    fill: var(--font-color);
 }

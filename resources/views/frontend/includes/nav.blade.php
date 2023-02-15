@@ -45,9 +45,6 @@
 
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('admin.dashboard') }}"> Dashboard </a>
-                            @if(env('API_PLAYGROUND'))
-                                <a class="dropdown-item" href="{{ route('playground') }}"> Playground </a>
-                            @endif
                             <a class="dropdown-item" href="{{ route('frontend.auth.logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

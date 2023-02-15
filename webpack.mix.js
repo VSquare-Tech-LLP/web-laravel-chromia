@@ -18,11 +18,6 @@ mix.setPublicPath('public')
     .js('resources/js/backend/app.js', 'js/backend.js')
     .sass('resources/sass/backend/app.scss', 'css/backend.css')
     .sass('resources/sass/frontend/app.scss', 'css/')
-    .sass('resources/sass/frontend/homepage.scss', 'css/')
-    .sass('resources/sass/frontend/blog-page.scss', 'css/')
-    .sass('resources/sass/frontend/author-page.scss', 'css/')
-    .sass('resources/sass/frontend/single-category-page.scss', 'css/')
-    .sass('resources/sass/frontend/category-page.scss', 'css/')
     .extract([
         'alpinejs',
         'jquery',

@@ -16,7 +16,6 @@
 @endsection
 
 @push('after-styles')
-    <link href="{{ mix('css/homepage.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
