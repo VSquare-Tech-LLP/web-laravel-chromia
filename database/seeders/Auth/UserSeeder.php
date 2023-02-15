@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
 
 
         $expected_domain = env('APP_EXPECTED_DOMAIN', 'admin.com');
-        $expected_password = env('DB_PASSWORD','secret');
+        $expected_password = env('APP_USER_PASSWORD','secret');
 
         // Add the master administrator, user id of 1
         User::create([
