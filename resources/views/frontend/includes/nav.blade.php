@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md ">
     <div class="container position-relative">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="@lang('Toggle navigation')">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="@lang('Toggle navigation')">
             <span class="navbar-toggler-icon">
                 <svg fill="white" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -18,19 +18,19 @@
             </span>
         </button>
         @if(config('site_logo'))
-            <a href="{{route('frontend.index')}}" class="logo-wrapper mx-auto" aria-label="Logo">
+            <a href="{{route('frontend.index')}}" class="logo-wrapper mxnavbar-brand mr-auto-auto" aria-label="Logo">
                 <img src="{{asset('storage/logos/'.config('site_logo'))}}" height="30px" width="175px" alt="{{appName()}} Logo"></a>
         @else
             <x-utils.link
                 :href="route('frontend.index')"
                 :text="appName()"
-                class="navbar-brand mr-auto" />
+                class="navbar-brand mx-auto" />
         @endif
 
 
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto mr-lg-4">
+            <ul class="navbar-nav ms-auto mr-lg-4">
                 @guest
                     @if (Route::has('frontend.auth.login'))
                         <li class="nav-item">
