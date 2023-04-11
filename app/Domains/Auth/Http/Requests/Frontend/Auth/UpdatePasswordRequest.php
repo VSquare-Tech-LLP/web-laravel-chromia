@@ -4,7 +4,6 @@ namespace App\Domains\Auth\Http\Requests\Frontend\Auth;
 
 use App\Domains\Auth\Rules\UnusedPassword;
 use Illuminate\Foundation\Http\FormRequest;
-use LangleyFoxall\LaravelNISTPasswordRules\PasswordRules;
 
 /**
  * Class UpdatePasswordRequest.
@@ -30,16 +29,10 @@ class UpdatePasswordRequest extends FormRequest
     {
         return [
             'current_password' => ['required', 'max:100'],
-            'password' => array_merge(
-                [
+            'password' => [
                     'max:100',
                     new UnusedPassword($this->user()),
-                ],
-                PasswordRules::changePassword(
-                    $this->email,
-                    config('boilerplate.access.user.password_history') ? 'current_password' : null
-                )
-            ),
+                ]
         ];
     }
 }

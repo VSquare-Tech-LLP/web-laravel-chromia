@@ -6,13 +6,17 @@ use App\Domains\Auth\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filter;
+use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 /**
  * Class UsersTable.
  */
 class UsersTable extends DataTableComponent
 {
+
+    public string $tableName = 'users';
+
     /**
      * @var
      */
@@ -44,9 +48,9 @@ class UsersTable extends DataTableComponent
     /**
      * @return Builder
      */
-    public function query(): Builder
+    public function builder(): Builder
     {
-        $query = User::with('roles');
+        $query = User::query()->selectRaw('*')->with('roles');
 
         if ($this->status === 'deleted') {
             $query = $query->onlyTrashed();
@@ -56,11 +60,7 @@ class UsersTable extends DataTableComponent
             $query = $query->onlyActive();
         }
 
-        return $query
-            ->when($this->getFilter('search'), fn ($query, $term) => $query->search($term))
-            ->when($this->getFilter('type'), fn ($query, $type) => $query->where('type', $type))
-            ->when($this->getFilter('active'), fn ($query, $active) => $query->where('active', $active === 'yes'))
-            ->when($this->getFilter('verified'), fn ($query, $verified) => $verified === 'yes' ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at'));
+        return $query;
     }
 
     /**
@@ -69,24 +69,44 @@ class UsersTable extends DataTableComponent
     public function filters(): array
     {
         return [
-            'type' => Filter::make('User Type')
-                ->select([
+            SelectFilter::make('User Type', 'type')
+                ->options([
                     '' => 'Any',
                     User::TYPE_ADMIN => 'Administrators',
                     User::TYPE_USER => 'Users',
-                ]),
-            'active' => Filter::make('Active')
-                ->select([
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    $builder->where('type', $value);
+                }),
+            SelectFilter::make('Active', 'active')
+                ->setFilterPillValues([
+                    '1' => 'Active',
+                    '0' => 'Inactive',
+                ])
+                ->options([
+                    '' => 'All',
+                    '1' => 'Yes',
+                    '0' => 'No',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === '1') {
+                        $builder->where('active', true);
+                    } elseif ($value === '0') {
+                        $builder->where('active', false);
+                    }
+                }),
+            SelectFilter::make('E-mail Verified', 'verified')
+                ->options([
                     '' => 'Any',
                     'yes' => 'Yes',
                     'no' => 'No',
-                ]),
-            'verified' => Filter::make('E-mail Verified')
-                ->select([
-                    '' => 'Any',
-                    'yes' => 'Yes',
-                    'no' => 'No',
-                ]),
+                ])->filter(function(Builder $builder, string $value) {
+                    if ($value === 'yes') {
+                        $builder->whereNotNull('email_verified_at');
+                    } elseif ($value === 'no') {
+                        $builder->whereNull('email_verified_at');
+                    }
+                }),
         ];
     }
 
@@ -97,24 +117,45 @@ class UsersTable extends DataTableComponent
     {
         return [
             Column::make(__('Type'))
+                ->format(
+                    fn($value, $row, Column $column) => view('backend.auth.user.includes.type', ['user' => $row])->withValue($value)
+                )
+                ->searchable()
                 ->sortable(),
             Column::make(__('Name'))
+                ->searchable()
                 ->sortable(),
-            Column::make(__('E-mail'), 'email')
+            LinkColumn::make(__('E-mail'), 'email')
+                ->title(fn($row) => $row->email)
+                ->location(fn($row) => 'mailto:'.$row->eamil)
+                ->attributes(fn($row) => [
+                    'class' => 'text-decoration->none',
+                ])
                 ->sortable(),
             Column::make(__('Verified'), 'email_verified_at')
+                ->format(
+                    fn($value, $row, Column $column) => view('backend.auth.user.includes.verified', ['user' => $row])->withValue($value)
+                )
                 ->sortable(),
-            Column::make(__('Roles')),
-            Column::make(__('Additional Permissions')),
-            Column::make(__('Actions')),
+            Column::make(__('Roles'))
+                ->label(
+                    fn($row, Column $column) => $row->roles_label
+                ),
+            Column::make(__('Additional Permissions'))
+                ->label(
+                    fn($row, Column $column) => $row->permissions_label
+                ),
+             Column::make('Actions')
+                 ->label(
+                     fn($row, Column $column) => view('backend.auth.user.includes.actions')->withUser($row)
+                 )
+                 ->unclickable(),
+
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function rowView(): string
+    public function configure(): void
     {
-        return 'backend.auth.user.includes.row';
+        $this->setPrimaryKey('id')->setDefaultSort('id', 'desc')->setPerPageAccepted([25, 50, 100])->setPerPage(50);
     }
 }

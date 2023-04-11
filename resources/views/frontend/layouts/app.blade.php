@@ -72,7 +72,6 @@
     @endif
 </head>
 <body>
-    @include('includes.partials.read-only')
     @include('includes.partials.logged-in-as')
 
     <div id="app">
