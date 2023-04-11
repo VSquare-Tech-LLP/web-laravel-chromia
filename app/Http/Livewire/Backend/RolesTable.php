@@ -46,9 +46,12 @@ class RolesTable extends DataTableComponent
                 ->label(
                     fn($row, Column $column) => $row->permissions_label
                 ),
-            Column::make(__('Number of Users'))
-                    ->label(fn ($row) => $row->users_count)
-                    ->sortable(),
+            Column::make(__('Number of Users'), 'id')
+                ->sortable()
+                ->searchable()
+                ->format(function ($value, $row, Column $column) {
+                    return $row->users_count;
+                }),
 
             Column::make('Actions')
                 ->label(
