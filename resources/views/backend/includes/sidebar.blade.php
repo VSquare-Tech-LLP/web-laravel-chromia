@@ -1,11 +1,12 @@
 <div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
     <div class="c-sidebar-brand d-lg-down-none">
-        <svg class="c-sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
-            <use xlink:href="{{ asset('img/brand/coreui.svg#full') }}"></use>
-        </svg>
-        <svg class="c-sidebar-brand-minimized" width="46" height="46" alt="CoreUI Logo">
-            <use xlink:href="{{ asset('img/brand/coreui.svg#signet') }}"></use>
-        </svg>
+{{--        <svg class="c-sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">--}}
+{{--            <use xlink:href="{{ asset('img/brand/coreui.svg#full') }}"></use>--}}
+{{--        </svg>--}}
+{{--        <svg class="c-sidebar-brand-minimized" width="46" height="46" alt="CoreUI Logo">--}}
+{{--            <use xlink:href="{{ asset('img/brand/coreui.svg#signet') }}"></use>--}}
+{{--        </svg>--}}
+        <h2 class="c-sidebar-brand-full"> {{ env('APP_NAME') }}</h2>
     </div><!--c-sidebar-brand-->
 
     <ul class="c-sidebar-nav">
@@ -109,6 +110,20 @@
                     :text="__('Robots File')" />
             </li>
         @endcan
+
+        <li class="c-sidebar-nav-title">@lang('Logout')</li>
+
+        <li class="c-sidebar-nav-item">
+            <x-utils.link
+                class="c-sidebar-nav-link"
+                icon="c-icon cil-account-logout mr-2"
+                onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <x-slot name="text">
+                    Logout
+                    <x-forms.post :action="route('frontend.auth.logout')" id="logout-form" class="d-none" />
+                </x-slot>
+            </x-utils.link>
+        </li>
     </ul>
 
     <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent" data-class="c-sidebar-minimized"></button>
