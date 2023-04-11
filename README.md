@@ -1,4 +1,4 @@
-## Laravel Boilerplate Blog CMS (Current: Laravel 8.*)
+## Laravel Boilerplate Blog CMS (Current: Laravel 10.*)
 
 ### Demo Credentials
 
