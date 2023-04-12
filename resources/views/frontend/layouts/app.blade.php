@@ -41,6 +41,7 @@
             display: block;
         }
     </style>
+    @if(env('CUSTOM_THEME_COLOR'))
     <style>
         :root{
             --primary-color: {{config('settings_primary_color') ?? '#1921ff' }};
@@ -53,6 +54,7 @@
             --content-link-hover-color: {{config('settings_content_link_hover_color') ?? 'var(--primary-color)' }};
         }
     </style>
+    @endif
     @if(config('scripts.header'))
         {!! config('scripts.header') !!}
     @endif
