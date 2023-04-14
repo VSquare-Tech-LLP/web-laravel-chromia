@@ -13,7 +13,7 @@
 
                     <x-slot name="body">
                         <x-forms.post :action="route('frontend.auth.password.email')">
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">@lang('E-mail Address')</label>
 
                                 <div class="col-md-6">
@@ -21,7 +21,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row mb-0">
+                            <div class="mb-3 row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button class="btn btn-primary" type="submit">@lang('Send Password Reset Link')</button>
                                 </div>

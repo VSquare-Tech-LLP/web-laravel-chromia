@@ -13,7 +13,7 @@
 
                     <x-slot name="body">
                         <x-forms.patch :action="route('frontend.auth.password.expired.update')">
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="current_password" class="col-md-4 col-form-label text-md-right">@lang('Current Password')</label>
 
                                 <div class="col-md-6">
@@ -21,7 +21,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="password" class="col-md-4 col-form-label text-md-right">@lang('New Password')</label>
 
                                 <div class="col-md-6">
@@ -29,7 +29,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="password_confirmation" class="col-md-4 col-form-label text-md-right">@lang('Password Confirmation')</label>
 
                                 <div class="col-md-6">
@@ -37,7 +37,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row mb-0">
+                            <div class="mb-3 row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button class="btn btn-primary" type="submit">@lang('Update Password')</button>
                                 </div>

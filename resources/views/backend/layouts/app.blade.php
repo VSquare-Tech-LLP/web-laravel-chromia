@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ htmlLang() }}" @langrtl dir="rtl" @endlangrtl>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,18 +15,19 @@
     <livewire:styles />
     @stack('after-styles')
 </head>
-<body class="c-app">
+
+<body>
     @include('backend.includes.sidebar')
 
-    <div class="c-wrapper c-fixed-components">
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
         @include('backend.includes.header')
         @include('includes.partials.logged-in-as')
 
-        <div class="c-body">
-            <main class="c-main">
+        <div class="body flex-grow-1 py-4">
+            <main class="main">
                 <div class="container-fluid">
                     <div class="fade-in">
-                        @include('includes.partials.messages')
+                        @include('includes.partials.messages', ['backend' => 'true'])
                         @yield('content')
                     </div><!--fade-in-->
                 </div><!--container-fluid-->
@@ -42,4 +44,5 @@
     <livewire:scripts />
     @stack('after-scripts')
 </body>
+
 </html>

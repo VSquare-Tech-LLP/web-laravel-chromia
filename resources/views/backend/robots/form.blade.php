@@ -9,7 +9,7 @@
                 @lang('Manage Robots.txt File')
             </x-slot>
             <x-slot name="body">
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <label for="name" class="col-md-2 col-form-label">@lang('File')</label>
 
                     <div class="col-md-10">

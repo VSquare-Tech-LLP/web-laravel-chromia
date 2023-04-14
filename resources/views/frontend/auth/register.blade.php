@@ -13,7 +13,7 @@
 
                     <x-slot name="body">
                         <x-forms.post :action="route('frontend.auth.register')">
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">@lang('Name')</label>
 
                                 <div class="col-md-6">
@@ -21,7 +21,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">@lang('E-mail Address')</label>
 
                                 <div class="col-md-6">
@@ -29,7 +29,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">@lang('Password')</label>
 
                                 <div class="col-md-6">
@@ -37,7 +37,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">@lang('Password Confirmation')</label>
 
                                 <div class="col-md-6">
@@ -45,7 +45,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <div class="col-md-6 offset-md-4">
                                     <div class="form-check">
                                         <input type="checkbox" name="terms" value="1" id="terms" class="form-check-input" required>
@@ -65,7 +65,7 @@
                                 </div><!--row-->
                             @endif
 
-                            <div class="form-group row mb-0">
+                            <div class="mb-3 row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button class="btn btn-primary" type="submit">@lang('Register')</button>
                                 </div>

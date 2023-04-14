@@ -11,7 +11,7 @@
             <div class="form-wrap"></div>
             @csrf
             @if($form->captcha)
-            <div class="form-group col-md-12 col-xs-12 text-center mx-auto">
+            <div class="mb-3 col-md-12 col-xs-12 text-center mx-auto">
                 <div class="text-center d-inline-block">
                     {!! NoCaptcha::display() !!}
                     @if ($errors->has('g-recaptcha-response'))

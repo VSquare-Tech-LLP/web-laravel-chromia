@@ -1,5 +1,5 @@
 <x-forms.patch :action="route('frontend.user.profile.update')">
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label for="name" class="col-md-3 col-form-label text-md-right">@lang('Name')</label>
 
         <div class="col-md-9">
@@ -8,7 +8,7 @@
     </div><!--form-group-->
 
     @if ($logged_in_user->canChangeEmail())
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label for="email" class="col-md-3 col-form-label text-md-right">@lang('E-mail Address')</label>
 
             <div class="col-md-9">
@@ -21,7 +21,7 @@
         </div><!--form-group-->
     @endif
 
-    <div class="form-group row mb-0">
+    <div class="mb-3 row mb-0">
         <div class="col-md-12 text-right">
             <button class="btn btn-sm btn-primary float-right" type="submit">@lang('Update')</button>
         </div>

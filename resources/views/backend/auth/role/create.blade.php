@@ -17,7 +17,7 @@
 
             <x-slot name="body">
                 <div x-data="{userType : '{{ $model::TYPE_USER }}'}">
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label for="name" class="col-md-2 col-form-label">@lang('Type')</label>
 
                         <div class="col-md-10">
@@ -28,7 +28,7 @@
                         </div>
                     </div><!--form-group-->
 
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label for="name" class="col-md-2 col-form-label">@lang('Name')</label>
 
                         <div class="col-md-10">

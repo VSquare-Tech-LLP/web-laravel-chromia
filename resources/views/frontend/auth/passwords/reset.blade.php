@@ -15,7 +15,7 @@
                         <x-forms.post :action="route('frontend.auth.password.update')">
                             <input type="hidden" name="token" value="{{ $token }}" />
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">@lang('E-mail Address')</label>
 
                                 <div class="col-md-6">
@@ -23,7 +23,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="password" class="col-md-4 col-form-label text-md-right">@lang('Password')</label>
 
                                 <div class="col-md-6">
@@ -31,7 +31,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row">
+                            <div class="mb-3 row">
                                 <label for="password_confirmation" class="col-md-4 col-form-label text-md-right">@lang('Password Confirmation')</label>
 
                                 <div class="col-md-6">
@@ -39,7 +39,7 @@
                                 </div>
                             </div><!--form-group-->
 
-                            <div class="form-group row mb-0">
+                            <div class="mb-3 row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button class="btn btn-primary" type="submit">@lang('Reset Password')</button>
                                 </div>

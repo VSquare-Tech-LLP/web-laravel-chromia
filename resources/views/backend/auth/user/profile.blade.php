@@ -15,20 +15,20 @@
             @endif
             <x-slot name="body">
                 <div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="short_bio" class="form-control-label font-weight-bold">@lang('Shor Bio')</label>
                         <textarea name="short_bio" class="form-control">{{ old('short_bio',$userMetas->short_bio) }}</textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="long_bio" class="form-control-label font-weight-bold">@lang('Long Bio')</label>
                         <textarea name="long_bio" class="form-control">{{ old('short_bio',$userMetas->long_bio) }}</textarea>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="image" class="form-control-label font-weight-bold">@lang('Image')</label>
                         <input type="file" name="image" class="form-control" accept="image/jpeg,image/gif,image/png"/>
                     </div>
                     @if($userMetas->image)
-                    <div class="form-group">
+                    <div class="mb-3">
                         <img src="{{ $userMetas->image_path }}" width="80">
                     </div>
                     @endif
