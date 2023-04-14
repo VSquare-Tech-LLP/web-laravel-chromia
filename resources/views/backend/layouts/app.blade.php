@@ -27,7 +27,7 @@
             <main class="main">
                 <div class="container-fluid">
                     <div class="fade-in">
-                        @include('includes.partials.messages', ['backend' => 'true'])
+                        @include('includes.partials.messages', ['backend' => true])
                         @yield('content')
                     </div><!--fade-in-->
                 </div><!--container-fluid-->
