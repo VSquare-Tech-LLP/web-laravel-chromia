@@ -19,3 +19,6 @@ use Illuminate\Http\Request;
 //});
 Route::post('/face-swap', [FaceSwapController::class, 'uploadImages']);
 Route::post('/face-swap-results', [FaceSwapController::class, 'getResult']);
+
+Route::post('/face-swap-batch', [FaceSwapController::class, 'uploadImageBatch']);
+Route::get('/face-swap-batch-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);

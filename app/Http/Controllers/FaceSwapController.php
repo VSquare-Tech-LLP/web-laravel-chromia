@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FaceSwapTask;
 use App\Services\ReplicateApi;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,6 +29,61 @@ class FaceSwapController extends Controller
 
             // Return the analysis result
             return response()->json(['status' => "success", 'data' => $analysisResult]);
+        } catch (Exception $e) {
+            return response()->json(['status' => "false", 'data' => $e], 500);
+        }
+    }
+
+    public function uploadImageBatch(Request $request)
+    {
+        try {
+            // ... existing validation for the 'source'
+            // Validate the 'targets' as an array of images
+            $request->validate([
+                'source' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'targets' => 'required|array|min:1|max:10',
+                'targets.*' => 'image|mimes:jpeg,png,jpg,gif|max:50000',
+            ], [
+                'targets.required' => 'The targets field is required.',
+                'targets.array' => 'The targets field must be an array.',
+                'targets.min' => 'At least one target image is required.',
+                'targets.max' => 'No more than 10 target images are allowed.',
+                'targets.*.image' => 'Each target must be an image.',
+                'targets.*.mimes' => 'Each target must be a jpeg, png, jpg, or gif file.',
+                'targets.*.max' => 'Each target image must not exceed 5000 kilobytes in size.',
+            ]);
+
+            $rq_time = time();
+            $sourceImage = $request->file('source')->storeAs('images', $rq_time . '_source.jpg');
+            $targetImages = [];
+            foreach ($request->file('targets') as $index => $file) {
+                $targetImages[] = $file->storeAs('images', $rq_time . '_target_' . $index . '.jpg');
+            }
+
+            // Create a new task record in the face_swap_tasks table
+            $task = new FaceSwapTask;
+            $task->source_image = $sourceImage; // the path to the stored source image
+            $task->target_images = json_encode($targetImages); // the paths to the stored target images
+            $task->status = 'pending';
+            $task->save();
+
+            // Analyze the images
+            $analysisResults = $this->analyzeImagesBatch($sourceImage, $targetImages);
+
+            // Update the task with the results
+            $task->results = json_encode($analysisResults);
+            $task->status = 'completed'; // or 'failed' if any of the analyses did not succeed
+            $task->save();
+
+            return response()->json([
+                'status' => 'processing',
+                'task_id' => $task->id,
+                // You might want to send back a summary instead of all results, depending on the size
+                'data' => $analysisResults,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // This will return the validation errors.
+            return response()->json(['status' => "false", 'errors' => $e->errors()], 422);
         } catch (Exception $e) {
             return response()->json(['status' => "false", 'data' => $e], 500);
         }
@@ -97,6 +153,40 @@ class FaceSwapController extends Controller
         return $data;
     }
 
+    private function analyzeImagesBatch($sourceImage, array $targetImages)
+    {
+        $replicateService = new ReplicateApi();
+        $analysisResults = [];
+
+        foreach ($targetImages as $targetImage) {
+            $body = json_encode([
+                'version' => env('MODEL_VERSION'),
+                'input' => [
+                    'swap_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $sourceImage))),
+                    'target_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $targetImage))),
+                ]
+            ]);
+            $data = $replicateService->getFaceSwap($body);
+            Log::info("replicate response", ["response" => $data]);
+
+            // Here you can decide whether to continue processing if one fails,
+            // or maybe you want to collect the successful ones and report any failures separately.
+            if ($data->status == 'starting') {
+                $analysisResults[] = $data->urls;
+            } else {
+                // Handle the error accordingly, you might want to log the error or add it to an errors array.
+                Log::error("Error processing target image {$targetImage}", ["error" => $data]);
+                $analysisResults[] = [
+                    'status' => 'failed',
+                    'target_image' => $targetImage,
+                    'error' => 'Failed to process image',
+                ];
+            }
+        }
+
+        return $analysisResults;
+    }
+
     public function getResult(Request $request)
     {
         try {
@@ -127,44 +217,89 @@ class FaceSwapController extends Controller
         return $data;
     }
 
-    public function formatJson($data)
+    public function getBatchResult($taskId)
     {
-        $newdata = $data;
         try {
-            $a = array_map(function ($key) {
-                $key = $this->filterKey($key);
-                return str_replace(' ', '', $key);
-            }, array_keys($data));
-            $b = array_map(function ($val) {
-                if (is_array($val)) {
-                    $c = array_map(function ($key) {
-                        $key = $this->filterKey($key);
-                        return str_replace(' ', '', $key);
-                    }, array_keys($val));
-                    $d = array_map(function ($s) {
-                        return $s;
-                    }, $val);
-                    return array_combine($c, $d);
-                } else {
-                    return $val;
+            $task = FaceSwapTask::find($taskId);
+            // Check if the task exists
+            if (!$task) {
+                return response()->json(['status' => "error", 'message' => "Task not found"], 404);
+            }
+            // Check if the task has completed  `
+            if ($task->status == 'completed') {
+                return response()->json(['status' => "success", 'results' => json_decode($task->results)]);
+            }
+            // Check if the task has results
+            if ($task->results) {
+                $replicateService = new ReplicateApi();
+                $final_results = [];
+                // Loop through the results
+                foreach (json_decode($task->results) as $result) {
+                    $url = $result->get;
+                    $data = $replicateService->getResults($url);
+                    // Check if the task has completed
+                    if ($data->status == "succeeded") {
+                        $data = $data->output;
+                        if ($data) {
+                            $final_results[] = $data;
+                        } else {
+                            $final_results[] = "";
+                        }
+                    } else {
+                        $final_results[] = ['status' => $data->status, 'results' => $data];
+                    }
                 }
-            }, $data);
-
-            $newdata = array_combine($a, $b);
-            return $newdata;
+                // Update the task status
+                $task->results = $final_results;
+                $task->status = 'completed';
+                $task->save();
+                return response()->json(['status' => "success", 'results' => $final_results]);
+            }
+            return response()->json(['status' => "failure", 'message' => "Task could not be found."], 404);
         } catch (Exception $e) {
-            Log::error("Formatting issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getFile(), 'input' => $data]);
-            return false;
+            Log::error("generate image issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getTrace()]);
+            return response()->json(['status' => "failure", 'message' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
         }
     }
 
-    public function filterKey($key)
-    {
+    // public function formatJson($data)
+    // {
+    //     $newdata = $data;
+    //     try {
+    //         $a = array_map(function ($key) {
+    //             $key = $this->filterKey($key);
+    //             return str_replace(' ', '', $key);
+    //         }, array_keys($data));
+    //         $b = array_map(function ($val) {
+    //             if (is_array($val)) {
+    //                 $c = array_map(function ($key) {
+    //                     $key = $this->filterKey($key);
+    //                     return str_replace(' ', '', $key);
+    //                 }, array_keys($val));
+    //                 $d = array_map(function ($s) {
+    //                     return $s;
+    //                 }, $val);
+    //                 return array_combine($c, $d);
+    //             } else {
+    //                 return $val;
+    //             }
+    //         }, $data);
 
-        if ($key == 'Rating' || $key == 'rating') {
-            $key = "Ratings";
-        }
+    //         $newdata = array_combine($a, $b);
+    //         return $newdata;
+    //     } catch (Exception $e) {
+    //         Log::error("Formatting issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getFile(), 'input' => $data]);
+    //         return false;
+    //     }
+    // }
 
-        return ucwords($key);
-    }
+    // public function filterKey($key)
+    // {
+
+    //     if ($key == 'Rating' || $key == 'rating') {
+    //         $key = "Ratings";
+    //     }
+
+    //     return ucwords($key);
+    // }
 }
