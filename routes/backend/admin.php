@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\AppBackendController;
 use App\Http\Controllers\Backend\DashboardController;
 use Tabuna\Breadcrumbs\Trail;
 
@@ -15,3 +16,9 @@ Route::get('dashboard', [DashboardController::class, 'index'])
 //====== Robots.txt route ===========//
 Route::get('robots-file-read', [DashboardController::class, 'robotsFileRead'])->name('robots_file_read');
 Route::post('robots-file-write', [DashboardController::class, 'robotsFileWrite'])->name('robots_file_write');
+
+Route::get('categories', [AppBackendController::class, 'showaCategories'])->name('categories.index');
+Route::get('categories/{category}/edit', [AppBackendController::class, 'editCategory'])->name('categories.edit');
+Route::post('categories/store', [AppBackendController::class, 'storeCategory'])->name('categories.store');
+Route::get('packs', [AppBackendController::class, 'showPacks'])->name('packs');
+Route::get('photos', [AppBackendController::class, 'showPhotos'])->name('photos');

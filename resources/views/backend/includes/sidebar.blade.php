@@ -80,6 +80,21 @@
         </li>
         @endif
 
+        @if ($logged_in_user->hasAllAccess())
+        <li class="nav-group">
+            <x-utils.link href="#" icon="nav-icon cil-list" class="nav-link nav-group-toggle" :text="__('Templates')" />
+        
+            <ul class="nav-group-items">
+                <li class="nav-item">
+                    <x-utils.link :href="route('admin.categories.index')" class="nav-link" :text="__('Categories')" />
+                </li>
+                <li class="nav-item">
+                    <x-utils.link :href="route('log-viewer::logs.list')" class="nav-link" :text="__('Packs')" />
+                </li>
+            </ul>
+        </li>
+        @endif
+
         @can('robots_text_menu')
         <li class="nav-item">
             <x-utils.link class="nav-link" :href="route('admin.robots_file_read')" :active="activeClass(Route::is('admin.robots_file_read'), 'c-active')" icon="nav-icon cil-file" :text="__('Robots File')" />

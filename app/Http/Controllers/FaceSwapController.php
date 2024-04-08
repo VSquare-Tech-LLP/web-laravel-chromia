@@ -262,44 +262,5 @@ class FaceSwapController extends Controller
         }
     }
 
-    // public function formatJson($data)
-    // {
-    //     $newdata = $data;
-    //     try {
-    //         $a = array_map(function ($key) {
-    //             $key = $this->filterKey($key);
-    //             return str_replace(' ', '', $key);
-    //         }, array_keys($data));
-    //         $b = array_map(function ($val) {
-    //             if (is_array($val)) {
-    //                 $c = array_map(function ($key) {
-    //                     $key = $this->filterKey($key);
-    //                     return str_replace(' ', '', $key);
-    //                 }, array_keys($val));
-    //                 $d = array_map(function ($s) {
-    //                     return $s;
-    //                 }, $val);
-    //                 return array_combine($c, $d);
-    //             } else {
-    //                 return $val;
-    //             }
-    //         }, $data);
-
-    //         $newdata = array_combine($a, $b);
-    //         return $newdata;
-    //     } catch (Exception $e) {
-    //         Log::error("Formatting issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getFile(), 'input' => $data]);
-    //         return false;
-    //     }
-    // }
-
-    // public function filterKey($key)
-    // {
-
-    //     if ($key == 'Rating' || $key == 'rating') {
-    //         $key = "Ratings";
-    //     }
-
-    //     return ucwords($key);
-    // }
+    
 }
