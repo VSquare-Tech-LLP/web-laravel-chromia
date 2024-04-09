@@ -35,7 +35,7 @@ class CompressImages extends Command
         $files = Storage::files($dir);
         $manager = new ImageManager(new Driver());
         foreach ($files as $template_image) {
-            $scaledPath = (Storage::path($dir) . $this->getEndName($template_image));
+            $scaledPath = (Storage::path($dir) . '/' . $this->getEndName($template_image));
             try {
                 //$imagefile = Storage::get($template_image);
                 [$width, $height] = getimagesize(Storage::path($template_image));
