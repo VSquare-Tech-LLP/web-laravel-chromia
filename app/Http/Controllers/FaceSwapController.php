@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FaceSwapTask;
+use App\Models\Pack;
 use App\Services\ReplicateApi;
 use Exception;
 use Illuminate\Http\Request;
@@ -72,7 +73,7 @@ class FaceSwapController extends Controller
 
             // Update the task with the results
             $task->results = json_encode($analysisResults);
-            $task->status = 'completed'; // or 'failed' if any of the analyses did not succeed
+            $task->status = 'processing'; // or 'failed' if any of the analyses did not succeed
             $task->save();
 
             return response()->json([
@@ -88,52 +89,51 @@ class FaceSwapController extends Controller
             return response()->json(['status' => "false", 'data' => $e], 500);
         }
     }
+    public function uploadImagePack(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'source' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'pack_id' => 'required',
+            ], [
+                'source.required' => 'Source field is required',
+                'pack_id.required' => 'Pack id is required'
+            ]);
 
-    // private function analyzeImagesFal($image1Path, $image2Path)
-    // {
-    //     $data = "";
-    //     $apiEndpoint = 'https://fal.run/fal-ai/llavav15-13b';
+            $rq_time = time();
+            $selected_pack = Pack::findOrFail($request->pack_id)->with('photos')->first();
+            // Upload images to storage
+            $sourceImage = $request->file('source')->storeAs('images', $rq_time . '_ri1.jpg');
+            $targetImages = $selected_pack->photos()->pluck('path');
+            // Create a new task record in the face_swap_tasks table
+            $task = new FaceSwapTask;
+            $task->source_image = $sourceImage; // the path to the stored source image
+            $task->target_images = json_encode($targetImages); // the paths to the stored target images
+            $task->status = 'pending';
+            $task->save();
 
+            // Analyze the images
+            $analysisResults = $this->analyzePackBatch($sourceImage, $selected_pack);
 
-    //     //         echo $res->getBody();
+            // Update the task with the results
+            $task->results = json_encode($analysisResults);
+            $task->status = 'processing'; // or 'failed' if any of the analyses did not succeed
+            $task->save();
 
-    //     $body = [
-    //         'prompt' => 'be a giga chad and rate each of jawline, hair, skin, eyes, face, masculinity out of 10 go upto 1 decimal point. try to be more strict in rating. rate as if you are super ultra masculine person.',
-    //         'image_url' => 'data:image/png;base64,' . base64_encode(file_get_contents(storage_path('app/' . $image1Path))),
-    //     ];
-
-    //     try {
-    //         // $client = new Client();
-
-    //         // $response = $client->post($apiEndpoint, [
-    //         //     'json' => $body,
-    //         //     // Add other request options if needed
-    //         // ]);
-
-    //         // $apiResponse = json_decode($response->getBody(), true);
-
-    //         // // Process the API response as needed
-    //         // return response()->json($apiResponse);
-
-    //         $client = new Client();
-    //         $headers = [
-    //             'Authorization' => 'Key ' . env('FAL_KEY'),
-    //             'Content-Type' => 'application/json'
-    //         ];
-    //         $format = ""; //"give it in this format ex.'Jawline: 8.5\n Hair: 8.0\n Skin: 8.5\n Eyes: 8.0\n Face: 8.5\n6. Masculinity: 8.5'.";
-    //         $body = '{
-    //                 "prompt": "be a giga chad and rate each of jawline, hair, skin, eyes, face, masculinity out of 10 go upto 1 decimal point. only ratings. try to be more strict in rating. rate as if you are super ultra masculine person.",
-    //                 "image_url": "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202305/recall-hrithik-roshan-inter-sixteen_nine.jpg?VersionId=9EUAjXH2OKvgjOvKEmy8_8k8aOV6oW1_&size=690:388"
-    //         }';
-    //         $request = $client->request('POST', $apiEndpoint, ["body" => $body, "headers" => $headers]);
-    //         //$res = $client->sendAsync($request)->wait();
-    //         $data = (string)  $request->getBody();
-    //     } catch (\Exception $e) {
-    //         // Handle API request failure
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    //     return  json_decode($data);
-    // }
+            return response()->json([
+                'status' => 'processing',
+                'task_id' => $task->id,
+                // You might want to send back a summary instead of all results, depending on the size
+                'data' => $analysisResults,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // This will return the validation errors.
+            return response()->json(['status' => "false", 'errors' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['status' => "false", 'data' => $e->getMessage()], 500);
+        }
+    }
 
     private function analyzeImages($sourceImage, $targetImage)
     {
@@ -164,6 +164,39 @@ class FaceSwapController extends Controller
                 'input' => [
                     'swap_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $sourceImage))),
                     'target_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $targetImage))),
+                ]
+            ]);
+            $data = $replicateService->getFaceSwap($body);
+            Log::info("replicate response", ["response" => $data]);
+
+            // Here you can decide whether to continue processing if one fails,
+            // or maybe you want to collect the successful ones and report any failures separately.
+            if ($data->status == 'starting') {
+                $analysisResults[] = $data->urls;
+            } else {
+                // Handle the error accordingly, you might want to log the error or add it to an errors array.
+                Log::error("Error processing target image {$targetImage}", ["error" => $data]);
+                $analysisResults[] = [
+                    'status' => 'failed',
+                    'target_image' => $targetImage,
+                    'error' => 'Failed to process image',
+                ];
+            }
+        }
+
+        return $analysisResults;
+    }
+    private function analyzePackBatch($sourceImage, Pack $pack)
+    {
+        $replicateService = new ReplicateApi();
+        $analysisResults = [];
+
+        foreach ($pack->photos()->pluck('url') as $targetImage) {
+            $body = json_encode([
+                'version' => env('MODEL_VERSION'),
+                'input' => [
+                    'swap_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $sourceImage))),
+                    'target_image' => $targetImage,
                 ]
             ]);
             $data = $replicateService->getFaceSwap($body);
@@ -261,6 +294,4 @@ class FaceSwapController extends Controller
             return response()->json(['status' => "failure", 'message' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
         }
     }
-
-    
 }

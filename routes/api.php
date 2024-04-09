@@ -24,6 +24,9 @@ Route::post('/face-swap-results', [FaceSwapController::class, 'getResult']);
 Route::post('/face-swap-batch', [FaceSwapController::class, 'uploadImageBatch']);
 Route::get('/face-swap-batch-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);
 
+Route::post('/face-swap-pack', [FaceSwapController::class, 'uploadImagePack']);
+Route::get('/face-swap-pack-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);
+
 Route::get('/get-categories', [AppApiController::class, 'categories']);
 Route::get('/get-packs/{category?}', [AppApiController::class, 'packs']);
 Route::get('/get-pack-images/{pack?}', [AppApiController::class, 'packImages']);

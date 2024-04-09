@@ -12,6 +12,7 @@
         "php": "^8.1",
         "arcanedev/log-viewer": "^10.0.0",
         "guzzlehttp/guzzle": "^7.5.0",
+        "intervention/image": "^3.5",
         "jamesmills/laravel-timezone": "^1.11",
         "lab404/laravel-impersonate": "^1.7.4",
         "laravel/framework": "^10.0",

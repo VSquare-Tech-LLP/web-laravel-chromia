@@ -69,3 +69,14 @@ if (! function_exists('appOgImage')) {
 
     }
 }
+
+if (!function_exists('cdn_asset')) {
+    function cdn_asset($path)
+    {
+        if (env('CDN_URL') == null) {
+            return asset('storage/' . $path);
+        } else {
+            return env('CDN_URL') . '/' . $path;
+        }
+    }
+}
