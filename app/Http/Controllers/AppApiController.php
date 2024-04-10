@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Pack;
+use Exception;
 use Illuminate\Http\Request;
 
 class AppApiController extends Controller
@@ -18,10 +19,19 @@ class AppApiController extends Controller
         }
         return app_json($packs);
     }
-    public function packImages(Pack $pack)
+    public function packImages(Request $request, $pack)
     {
-        $packs = $pack::with('photos')->get();
-        return app_json($packs);
+        try {
+            $pack_eq = Pack::find($pack);
+            if ($pack_eq) {
+                $pack_eq->with('photos')->first();
+                return app_json($pack_eq);
+            } else {
+                return response()->json(['status' => 'failure', 'message' => "Requested pack not found"], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failure', 'message' => "Requested pack not found"], 404);
+        }
     }
 
     public function categories()
