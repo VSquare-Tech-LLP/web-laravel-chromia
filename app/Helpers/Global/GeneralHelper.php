@@ -4,7 +4,7 @@ use App\Models\Blog\Category;
 use App\Models\Blog\Post;
 use Carbon\Carbon;
 
-if (! function_exists('appName')) {
+if (!function_exists('appName')) {
     /**
      * Helper to grab the application name.
      *
@@ -16,7 +16,7 @@ if (! function_exists('appName')) {
     }
 }
 
-if (! function_exists('carbon')) {
+if (!function_exists('carbon')) {
     /**
      * Create a new Carbon instance from a time.
      *
@@ -31,7 +31,7 @@ if (! function_exists('carbon')) {
     }
 }
 
-if (! function_exists('homeRoute')) {
+if (!function_exists('homeRoute')) {
     /**
      * Return the route to the "home" page depending on authentication/authorization status.
      *
@@ -53,7 +53,7 @@ if (! function_exists('homeRoute')) {
     }
 }
 
-if (! function_exists('appOgImage')) {
+if (!function_exists('appOgImage')) {
     /**
      * Helper to grab the application OG image.
      *
@@ -61,12 +61,11 @@ if (! function_exists('appOgImage')) {
      */
     function appOgImage()
     {
-        if(config('og_image')){
-            return asset('storage/logos/'.config('og_image'));
-        }else{
+        if (config('og_image')) {
+            return asset('storage/logos/' . config('og_image'));
+        } else {
             return asset('images/amz-cms-og-image.png');
         }
-
     }
 }
 
@@ -78,5 +77,12 @@ if (!function_exists('cdn_asset')) {
         } else {
             return env('CDN_URL') . '/' . $path;
         }
+    }
+}
+
+if (!function_exists('app_json')) {
+    function app_json($data, $status = 'success')
+    {
+        return response()->json(['status' => $status, 'data' => $data]);
     }
 }
