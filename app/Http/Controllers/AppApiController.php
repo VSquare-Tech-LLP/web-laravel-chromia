@@ -24,8 +24,8 @@ class AppApiController extends Controller
         try {
             $pack_eq = Pack::find($pack);
             if ($pack_eq) {
-                $pack_eq->with('photos')->first();
-                return app_json($pack_eq);
+                $pack_with_images = $pack_eq->with('photos')->first();
+                return app_json($pack_with_images);
             } else {
                 return response()->json(['status' => 'failure', 'message' => "Requested pack not found"], 404);
             }
