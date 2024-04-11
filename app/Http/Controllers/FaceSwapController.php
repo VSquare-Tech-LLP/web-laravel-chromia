@@ -29,9 +29,9 @@ class FaceSwapController extends Controller
             $analysisResult = $this->analyzeImages($sourceImage, $targetImage);
 
             // Return the analysis result
-            return response()->json(['status' => "success", 'data' => $analysisResult]);
+            return app_json($analysisResult);
         } catch (Exception $e) {
-            return response()->json(['status' => "false", 'data' => $e], 500);
+            return response()->json(['status' => "failure", 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -41,9 +41,9 @@ class FaceSwapController extends Controller
             // ... existing validation for the 'source'
             // Validate the 'targets' as an array of images
             $request->validate([
-                'source' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'source' => 'required|image|mimes:jpeg,png,jpg',
                 'targets' => 'required|array|min:1|max:10',
-                'targets.*' => 'image|mimes:jpeg,png,jpg,gif|max:50000',
+                'targets.*' => 'image|mimes:jpeg,png,jpg|max:50000',
             ], [
                 'targets.required' => 'The targets field is required.',
                 'targets.array' => 'The targets field must be an array.',
@@ -77,16 +77,14 @@ class FaceSwapController extends Controller
             $task->save();
 
             return response()->json([
-                'status' => 'processing',
-                'task_id' => $task->id,
-                // You might want to send back a summary instead of all results, depending on the size
-                'data' => $analysisResults,
+                'status' => 'success',
+                'data' => ['task_id' => $task->id, 'task_details' => $analysisResults]
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // This will return the validation errors.
-            return response()->json(['status' => "false", 'errors' => $e->errors()], 422);
+            return response()->json(['status' => "failure", 'message' => 'Something went wrong.'], 422);
         } catch (Exception $e) {
-            return response()->json(['status' => "false", 'data' => $e], 500);
+            return response()->json(['status' => "failure", 'data' => $e->getMessage()], 500);
         }
     }
     public function uploadImagePack(Request $request)
@@ -122,16 +120,14 @@ class FaceSwapController extends Controller
             $task->save();
 
             return response()->json([
-                'status' => 'processing',
-                'task_id' => $task->id,
-                // You might want to send back a summary instead of all results, depending on the size
-                'data' => $analysisResults,
+                'status' => 'success',
+                'data' => ['task_id' => $task->id, 'task_details' => $analysisResults]
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // This will return the validation errors.
-            return response()->json(['status' => "false", 'errors' => $e->errors()], 422);
+            return response()->json(['status' => "failure", 'message' => 'Something went wrong.'], 422);
         } catch (Exception $e) {
-            return response()->json(['status' => "false", 'data' => $e->getMessage()], 500);
+            return response()->json(['status' => "failure", 'message' => 'Something went wrong', 'error' => [$e->getMessage(), $e->getLine(), $e->getTrace()]], 500);
         }
     }
 
@@ -190,17 +186,17 @@ class FaceSwapController extends Controller
     {
         $replicateService = new ReplicateApi();
         $analysisResults = [];
-
-        foreach ($pack->photos()->pluck('url') as $targetImage) {
+        //TODO:remove take(2) when testing is over.
+        foreach ($pack->photos()->take(2)->pluck('url') as $targetImage) {
             $body = json_encode([
                 'version' => env('MODEL_VERSION'),
                 'input' => [
                     'swap_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $sourceImage))),
-                    'target_image' => $targetImage,
+                    'target_image' => (app()->isLocal()) ? "data:image/png;base64," . base64_encode(file_get_contents($targetImage)) : $targetImage,
                 ]
             ]);
             $data = $replicateService->getFaceSwap($body);
-            Log::info("replicate response", ["response" => $data]);
+            Log::info("replicate response EE", ["response" => $data]);
 
             // Here you can decide whether to continue processing if one fails,
             // or maybe you want to collect the successful ones and report any failures separately.
@@ -256,16 +252,17 @@ class FaceSwapController extends Controller
             $task = FaceSwapTask::find($taskId);
             // Check if the task exists
             if (!$task) {
-                return response()->json(['status' => "error", 'message' => "Task not found"], 404);
+                return response()->json(['status' => "failure", 'message' => "Task not found"], 404);
             }
             // Check if the task has completed  `
             if ($task->status == 'completed') {
-                return response()->json(['status' => "success", 'results' => json_decode($task->results)]);
+                return app_json(json_decode($task->results));
             }
             // Check if the task has results
             if ($task->results) {
                 $replicateService = new ReplicateApi();
                 $final_results = [];
+                $final_status = 'success';
                 // Loop through the results
                 foreach (json_decode($task->results) as $result) {
                     $url = $result->get;
@@ -277,21 +274,32 @@ class FaceSwapController extends Controller
                             $final_results[] = $data;
                         } else {
                             $final_results[] = "";
+                            //$final_status = "processing";
                         }
+                    } elseif ($data->status == "failed") {
+                        $final_status = "failure";
                     } else {
-                        $final_results[] = ['status' => $data->status, 'results' => $data];
+                        $final_status = "processing";
+                        $final_results[] = ['status' => $data->status, 'data' => $data];
                     }
                 }
                 // Update the task status
-                $task->results = $final_results;
-                $task->status = 'completed';
-                $task->save();
-                return response()->json(['status' => "success", 'results' => $final_results]);
+                if ($final_status == "success") {
+                    $task->results = $final_results;
+                    $task->status = 'completed';
+                    $task->save();
+                } elseif ($final_status == "failure") {
+                    $task->results = $final_results;
+                    $task->status = 'failed';
+                    $task->save();
+                }
+
+                return app_json($final_results, $final_status);
             }
             return response()->json(['status' => "failure", 'message' => "Task could not be found."], 404);
         } catch (Exception $e) {
             Log::error("generate image issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getTrace()]);
-            return response()->json(['status' => "failure", 'message' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
+            return response()->json(['status' => "failure", 'message' => $e->getMessage(), 'line' => $e->getLine()], 500);
         }
     }
 }
