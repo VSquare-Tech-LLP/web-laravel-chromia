@@ -190,7 +190,7 @@ class FaceSwapController extends Controller
         $replicateService = new ReplicateApi();
         $analysisResults = [];
         //TODO:remove take(2) when testing is over.
-        foreach ($pack->photos()->take(2)->pluck('url') as $targetImage) {
+        foreach ($pack->photos->take(2)->pluck('url') as $targetImage) {
             $body = json_encode([
                 'version' => env('MODEL_VERSION'),
                 'input' => [
