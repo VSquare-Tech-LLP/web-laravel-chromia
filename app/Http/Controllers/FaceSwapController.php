@@ -102,10 +102,16 @@ class FaceSwapController extends Controller
             ]);
 
             $rq_time = time();
-            $selected_pack = Pack::findOrFail($request->pack_id)->with('photos')->first();
+            $selected_pack = Pack::find($request->pack_id);
             // Upload images to storage
             $sourceImage = $request->file('source')->storeAs('images', $rq_time . '_ri1.jpg');
-            $targetImages = $selected_pack->photos()->pluck('path');
+            $targetImages = $selected_pack->photos->pluck('path');
+            if ($targetImages->count() == 0) {
+                return response()->json([
+                    'status' => 'failure',
+                    'message' => "Selected pack does not have images"
+                ]);
+            }
             // Create a new task record in the face_swap_tasks table
             $task = new FaceSwapTask;
             $task->source_image = $sourceImage; // the path to the stored source image
@@ -185,7 +191,7 @@ class FaceSwapController extends Controller
 
         return $analysisResults;
     }
-    private function analyzePackBatch($sourceImage, Pack $pack)
+    private function analyzePackBatch($sourceImage, $pack)
     {
         $replicateService = new ReplicateApi();
         $analysisResults = [];
@@ -215,7 +221,6 @@ class FaceSwapController extends Controller
                 ];
             }
         }
-
         return $analysisResults;
     }
 
@@ -275,6 +280,7 @@ class FaceSwapController extends Controller
                     if ($data->status == "succeeded") {
                         $data = $data->output;
                         if ($data) {
+                            //$final_results[] = $this->storeLocaly($data);
                             $final_results[] = $data;
                         } else {
                             $final_results[] = "";
