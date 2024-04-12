@@ -8,6 +8,8 @@ use App\Services\ReplicateApi;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FaceSwapController extends Controller
 {
@@ -143,8 +145,9 @@ class FaceSwapController extends Controller
                 'target_image' => "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $targetImage))),
             ]
         ]);
-
         $data = $replicateService->getFaceSwap($body);
+        Storage::put('requests/' . $data->id . '_' . time() . '.json', json_encode(['request' => $body]));
+        Storage::put('requests/' . $data->id . '_r_' . time() . '.json', json_encode(['result' => $data]));
         Log::info("replicate response", ["response" => $data]);
         return $data;
     }
@@ -222,7 +225,8 @@ class FaceSwapController extends Controller
             $url = $request->callback_url;
             $replicateService = new ReplicateApi();
             $data = $replicateService->getResults($url);
-
+            $predictionId = Str::afterLast($url, '/');
+            Storage::put('results/' . $predictionId . '_' . time() . '.json', json_encode(['result_data' => $data]));
             if ($data->status == "succeeded") {
                 $data = $data->output;
                 if ($data) {
