@@ -18,14 +18,20 @@ use Illuminate\Http\Request;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-Route::post('/face-swap', [FaceSwapController::class, 'uploadImages']);
-Route::post('/face-swap-results', [FaceSwapController::class, 'getResult']);
+//** Depricated */
+// Route::post('/face-swap', [FaceSwapController::class, 'uploadImages']);
+// Route::post('/face-swap-results', [FaceSwapController::class, 'getResult']);
+Route::post('/face-swap', [FaceSwapController::class, 'goApiFaceSwap']);
+Route::post('/face-swap-results', [FaceSwapController::class, 'goApiFaceSwapResults']);
 
-Route::post('/face-swap-batch', [FaceSwapController::class, 'uploadImageBatch']);
-Route::get('/face-swap-batch-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);
+//** Not in use so closed. */
+// Route::post('/face-swap-batch', [FaceSwapController::class, 'uploadImageBatch']);
+// Route::get('/face-swap-batch-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);
 
-Route::post('/face-swap-pack', [FaceSwapController::class, 'uploadImagePack']);
-Route::get('/face-swap-pack-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);
+Route::post('/face-swap-pack', [FaceSwapController::class, 'goApiFaceSwapPack']);
+Route::get('/face-swap-pack-results/{taskId}', [FaceSwapController::class, 'goApiFaceSwapPackResult']);
+// Route::post('/face-swap-pack', [FaceSwapController::class, 'uploadImagePack']);
+// Route::get('/face-swap-pack-results/{taskId}', [FaceSwapController::class, 'getBatchResult']);
 
 Route::get('/get-categories', [AppApiController::class, 'categories']);
 Route::get('/get-packs/{category?}', [AppApiController::class, 'packs']);
