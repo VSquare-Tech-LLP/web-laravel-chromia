@@ -53,8 +53,8 @@ class GoApiService
     try {
       Log::info("GoApi API faceswap result request:", ['body' => $body, 'headers' => $this->headers], true);
       $result = $this->postRequest($this->result_url, $body, $this->headers);
-      Log::info("GoApi API faceswap response:", json_decode(json_encode($result), true));
-      return $result->data->image ?? "";
+      Log::info("GoApi API faceswap Result response:", json_decode(json_encode($result), true));
+      return $result->data ?? null;
     } catch (Exception $e) {
       Log::error("GoApi API issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getTrace()]);
       return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);

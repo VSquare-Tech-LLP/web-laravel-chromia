@@ -50,9 +50,12 @@ class FaceSwapController extends Controller
             // Validate the request
             $task_uuid = $request->task_uuid;
             $goApiService = new GoApiService();
-            $analysisResult = $goApiService->swapResult($task_uuid);
-            if ($analysisResult != "") {
-                $localImage = $this->storeLocaly($analysisResult);
+            $result = $goApiService->swapResult($task_uuid);
+
+            if ($result && $result->status == "success") {
+                $localImage = $this->storeLocaly($result->image);
+            } elseif ($result && $result->status == "processing") {
+                return response()->json(['status' => "processing", 'message' => "Generating image..."], 200);
             } else {
                 return response()->json(['status' => "failure", 'message' => "Check the logs."], 500);
             }
@@ -175,7 +178,11 @@ class FaceSwapController extends Controller
                     Log::info("GoApi FaceSwap Result ", ["image" => $data]);
                     // Check if the task has completed
                     if ($data) {
-                        $final_results[] = $this->storeLocaly($data);
+                        if ($data->status == "processing") {
+                            $final_status = "processing";
+                            $final_results[] = "";
+                        }
+                        $final_results[] = $this->storeLocaly($data->image);
                         //$final_results[] = $data;
                     } else {
                         $final_results[] = "";
