@@ -9,6 +9,7 @@ use App\Services\ReplicateApi;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
@@ -53,7 +54,11 @@ class FaceSwapController extends Controller
             $result = $goApiService->swapResult($task_uuid);
 
             if ($result && $result->status == "success") {
-                $localImage = $this->storeLocaly($result->image);
+                if ($request->has('watermark') && $request->watermark == true) {
+                    $localImage = $this->storeLocaly($result->image, true);
+                } else {
+                    $localImage = $this->storeLocaly($result->image);
+                }
             } elseif ($result && $result->status == "processing") {
                 return response()->json(['status' => "processing", 'message' => "Generating image..."], 200);
             } else {
@@ -68,7 +73,7 @@ class FaceSwapController extends Controller
 
     public function goApiFaceSwapPack(Request $request)
     {
-        //return $this->storeLocaly('https://i.pinimg.com/originals/c0/0d/a7/c00da774552c2a500e4f2f9c17f779fe.jpg');
+        //return $this->storeLocaly('https://face-swap.eyuva.xyz/storage/results/1713854312df516cc5-1285-45bc-8857-8ee817be3e9e.png');
         try {
             // Validate the request
             $request->validate([
@@ -154,7 +159,7 @@ class FaceSwapController extends Controller
         return $analysisResults;
     }
 
-    public function goApiFaceSwapPackResult($taskId)
+    public function goApiFaceSwapPackResult(Request $request, $taskId)
     {
         try {
             $task = FaceSwapTask::find($taskId);
@@ -182,7 +187,11 @@ class FaceSwapController extends Controller
                             $final_status = "processing";
                             $final_results[] = "";
                         }
-                        $final_results[] = $this->storeLocaly($data->image);
+                        if ($request->has('watermark') && $request->watermark == true) {
+                            $final_results[] = $this->storeLocaly($data->image, ture);
+                        } else {
+                            $final_results[] = $this->storeLocaly($data->image);
+                        }
                         //$final_results[] = $data;
                     } else {
                         $final_results[] = "";
@@ -519,8 +528,9 @@ class FaceSwapController extends Controller
         }
     }
 
-    public function storeLocaly($imageUrl)
+    public function storeLocaly($imageUrl, $addwatermark = false)
     {
+        //dd(public_path('home/hyfi-ai-watermark.png'), Storage::disk('public')->path('/home/hyfi-ai-watermark.png'));
         $dir = 'results'; // Define your storage path
 
         $imageData = file_get_contents($imageUrl);
@@ -529,10 +539,18 @@ class FaceSwapController extends Controller
             $fileName = time() . basename($imageUrl);
             $manager = new ImageManager(new Driver());
             $image = $manager->read($imageData);
-            //$image->place(public_path('img/watermark.png'), 'right-bottom', 300, 100, 50);
+            if ($addwatermark == true) {
+                $watermark = $manager->read(Storage::disk('public')->path('/home/hyfi-ai-watermark.png'));
+                // resize image proportionally to 300px width
+                $watermark->scale(width: 300);
+                $image->place($watermark, 'right-bottom', 30, 20, 50);
+            }
             //$image = $this->watermark($image);
             $image->toPng()->save(Storage::disk('public')->path($dir) . '/' . $fileName);
-
+            // //TODO:remove after testin
+            // $response = Response::make($image->toPng());
+            // $response->header('Content-Type', 'image/png');
+            // return $response; 
             // Optionally, you can also get the public URL of the stored image
             $publicUrl = asset("storage/$dir/$fileName");
             return $publicUrl;
