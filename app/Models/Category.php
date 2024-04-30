@@ -11,6 +11,6 @@ class Category extends Model
     protected $fillable = ['name'];
     public function packs()
     {
-        return $this->hasMany(Pack::class);
+        return $this->hasMany(Pack::class)->withCount('photos');
     }
 }
