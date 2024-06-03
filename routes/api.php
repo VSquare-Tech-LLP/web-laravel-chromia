@@ -36,3 +36,4 @@ Route::get('/face-swap-pack-results/{taskId}', [FaceSwapController::class, 'goAp
 Route::get('/get-categories', [AppApiController::class, 'categories']);
 Route::get('/get-packs/{category?}', [AppApiController::class, 'packs']);
 Route::get('/get-pack-images/{pack?}', [AppApiController::class, 'packImages']);
+Route::get('/get-random-images', [AppApiController::class, 'getRandomImages']);
