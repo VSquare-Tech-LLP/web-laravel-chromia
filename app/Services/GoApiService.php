@@ -35,9 +35,9 @@ class GoApiService
     ];
 
     try {
-      Log::info("GoApi API faceswap request:", ['body' => $body, 'headers' => $this->headers], true);
+      //Log::info("GoApi API faceswap request:", ['body' => $body, 'headers' => $this->headers], true);
       $result = $this->postRequest($this->request_url, $body, $this->headers);
-      Log::info("GoApi API faceswap response:", json_decode(json_encode($result), true));
+      Log::info("GoApi API faceswap request response:", json_decode(json_encode($result), true));
       return $result->data->task_id ?? "";
     } catch (Exception $e) {
       Log::error("GoApi API issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getTrace()]);
