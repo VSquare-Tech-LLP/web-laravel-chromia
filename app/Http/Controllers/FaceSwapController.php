@@ -62,7 +62,7 @@ class FaceSwapController extends Controller
             $result = $goApiService->swapResult($task_uuid);
 
             if ($result && $result->status == "success") {
-                if ($request->has('watermark') && $request->watermark == true) {
+                if ($request->has('watermark') && ($request->watermark == true || $request->watermark == "true")) {
                     $localImage = $this->storeLocaly($result->image, true);
                 } else {
                     $localImage = $this->storeLocaly($result->image);

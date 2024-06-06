@@ -39,7 +39,7 @@ class AppApiController extends Controller
     public function getRandomImages(Request $request)
     {
         try {
-            $randomPhotos = Photo::select('id', 'url')->inRandomOrder()->take(10)->get();
+            $randomPhotos = Photo::select('id', 'url')->inRandomOrder()->take(12)->get();
             return app_json($randomPhotos);
         } catch (Exception $e) {
             return response()->json(['status' => "failure", 'message' => $e->getMessage()], 500);
