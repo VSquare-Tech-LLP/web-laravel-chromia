@@ -63,9 +63,11 @@ class FaceSwapController extends Controller
 
             if ($result && $result->status == "success") {
                 if ($request->has('watermark') && ($request->watermark == true || $request->watermark == "true")) {
+                    Log::info("Generated with watermark = ", $request->watermark);
                     $localImage = $this->storeLocaly($result->image, true);
                 } else {
                     $localImage = $this->storeLocaly($result->image);
+                    Log::info("Generated without watermark = ", $request->watermark);
                 }
             } elseif ($result && ($result->status == "processing" || $result->status == "starting")) {
                 return response()->json(['status' => "processing", 'message' => "Generating image..."], 200);
@@ -540,7 +542,7 @@ class FaceSwapController extends Controller
     {
         //dd(public_path('home/hyfi-ai-watermark.png'), Storage::disk('public')->path('/home/hyfi-ai-watermark.png'));
         $dir = 'results'; // Define your storage path
-
+        Log::info("storeLocaly with watermark = ", $addwatermark);
         $imageData = file_get_contents($imageUrl);
 
         if ($imageData !== false || $imageData != "") {
