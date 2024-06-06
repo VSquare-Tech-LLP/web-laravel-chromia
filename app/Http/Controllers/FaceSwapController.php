@@ -67,7 +67,7 @@ class FaceSwapController extends Controller
                 } else {
                     $localImage = $this->storeLocaly($result->image);
                 }
-            } elseif ($result && $result->status == "processing") {
+            } elseif ($result && ($result->status == "processing" || $result->status == "starting")) {
                 return response()->json(['status' => "processing", 'message' => "Generating image..."], 200);
             } else {
                 return response()->json(['status' => "failure", 'message' => "Check the logs."], 500);
