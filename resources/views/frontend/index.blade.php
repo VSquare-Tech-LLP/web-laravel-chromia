@@ -20,7 +20,12 @@
 
 @section('content')
     <div class="container">
-        <div class="vh-100"></div>
+        <div class="vh-100 d-flex align-items-center justify-content-center">
+            <div class="wrapper d-flex flex-column">
+                <h1> Welcome to AI FaceSwap </h1>
+                <p>Fore more details Contact Us at tankariyapankaj@gmail.com</p>
+            </div>
+        </div>
     </div>
 @endsection
 
