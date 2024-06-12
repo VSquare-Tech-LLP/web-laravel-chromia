@@ -31,12 +31,21 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mr-lg-4">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('support') }}">{{ __('Support') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://face-swap.eyuva.xyz/storage/privacy-policy.pdf">{{ __('Privacy') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://face-swap.eyuva.xyz/storage/terms-of-use.pdf">{{ __('Terms & Conditions') }}</a>
+                </li>
                 @guest
-                    @if (Route::has('frontend.auth.login'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('frontend.auth.login') }}">{{ __('Login') }}</a>
-                        </li>
-                    @endif
+{{--                    @if (Route::has('frontend.auth.login'))--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="nav-link" href="{{ route('frontend.auth.login') }}">{{ __('Login') }}</a>--}}
+{{--                        </li>--}}
+{{--                    @endif--}}
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
