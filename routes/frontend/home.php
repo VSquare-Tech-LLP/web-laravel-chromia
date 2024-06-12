@@ -20,3 +20,6 @@ Route::get('terms', [TermsController::class, 'index'])
         $trail->parent('frontend.index')
             ->push(__('Terms & Conditions'), route('frontend.pages.terms'));
     });
+Route::get('support', [HomeController::class, 'getContactUs'])
+    ->name('contact-us');
+Route::post('support', [HomeController::class, 'saveContactUs']);
