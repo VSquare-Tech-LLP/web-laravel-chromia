@@ -49,7 +49,7 @@ class FaceSwapController extends Controller
             // Return the analysis result
             return app_json(['task_uuid' => $task_uuid]);
         } catch (Exception $e) {
-            return response()->json(['status' => "failure", 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => "error", 'message' => $e->getMessage()], 500);
         }
     }
 
