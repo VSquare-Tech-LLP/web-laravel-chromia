@@ -41,7 +41,10 @@ class GoApiService
       return $result->data->task_id ?? "";
     } catch (Exception $e) {
       Log::error("GoApi API issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getTrace()]);
-      return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
+      throw new Exception($e->getMessage(), $e->getCode(), $e); // Re-throw the exception
+      //return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
+      return "";
+      //return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
     }
   }
 
@@ -57,9 +60,9 @@ class GoApiService
       return $result->data ?? null;
     } catch (Exception $e) {
       Log::error("GoApi API issue " . $e->getMessage(), ['line' => $e->getLine(), 'trace' => $e->getTrace()]);
-      throw new Exception($e->getMessage(), $e->getCode(), $e); // Re-throw the exception
-      //return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
-      return "";
+      //throw new Exception($e->getMessage(), $e->getCode(), $e); // Re-throw the exception
+      return response()->json(['error' => $e->getMessage(), 'line' => $e->getLine(), 'trace' => $e->getTrace()], 500);
+      //return "";
     }
   }
 
