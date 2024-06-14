@@ -52,7 +52,44 @@ class FaceSwapController extends Controller
             return response()->json(['status' => "failure", 'data' => $e->getMessage()], 500);
         }
     }
+    public function goApiFaceSwapTest(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'source' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'target' => 'required_without:target_image_id|image|mimes:jpeg,png,jpg,gif',
+                'target_image_id' => 'required_without:target',
+            ]);
 
+            $rq_time = time();
+            // Upload images to storage
+            //$sourceImage = $request->file('source')->storeAs('images', $rq_time . '_ri1.jpg'); //changing it to be in public dir
+            $sourceImage = $request->file('source')->storeAs('public/images', $rq_time . '_source1.jpg');
+            if ($request->has('target')) {
+                //$targetImage = $request->file('target')->storeAs('images', $rq_time . '_ri2.jpg'); //changing it to be in public dir
+                $targetImage = $request->file('target')->storeAs('public/images', $rq_time . '_target2.jpg');
+                //$targetImgB64 = "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $targetImage)));
+                $targetImgB64 = asset(Storage::url($targetImage));
+            } elseif ($request->has('target_image_id')) {
+                $targetPhoto = Photo::find($request->target_image_id);
+                $targetImage = $targetPhoto->url;
+                $targetImgB64 = (app()->isLocal()) ? "data:image/png;base64," . base64_encode(file_get_contents($targetImage)) : $targetImage;
+            }
+
+            // Perform image analysis (you can use a third-party API or your own logic)
+            //$sourceImgB64 = "data:image/png;base64," . base64_encode(file_get_contents(storage_path('app/' . $sourceImage)));
+            $sourceImgB64 = asset(Storage::url($sourceImage));
+            $goApiService = new GoApiService();
+            $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
+
+            // Return the analysis result
+            return app_json(['task_uuid' => $task_uuid]);
+        } catch (Exception $e) {
+            Log::info("images", ['sourceImgB64' => $sourceImgB64, 'TargetImgB64' => $targetImgB64]);
+            return response()->json(['status' => "failure", 'data' => $e->getMessage()], 500);
+        }
+    }
     public function goApiFaceSwapResults(Request $request)
     {
         try {

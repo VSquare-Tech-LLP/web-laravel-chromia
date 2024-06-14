@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 // Route::post('/face-swap', [FaceSwapController::class, 'uploadImages']);
 // Route::post('/face-swap-results', [FaceSwapController::class, 'getResult']);
 Route::post('/face-swap', [FaceSwapController::class, 'goApiFaceSwap']);
+Route::post('/face-swap-test', [FaceSwapController::class, 'goApiFaceSwapTest']);
 Route::post('/face-swap-results', [FaceSwapController::class, 'goApiFaceSwapResults']);
 
 //** Not in use so closed. */
