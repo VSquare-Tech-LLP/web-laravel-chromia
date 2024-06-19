@@ -45,6 +45,15 @@ class AppApiController extends Controller
             return response()->json(['status' => "failure", 'message' => $e->getMessage()], 500);
         }
     }
+    public function getRandomImagesTest(Request $request)
+    {
+        try {
+            $randomPhotos = Photo::select('id', 'url')->inRandomOrder()->take(12)->get()->append(['thumbnail']);
+            return app_json($randomPhotos);
+        } catch (Exception $e) {
+            return response()->json(['status' => "failure", 'message' => $e->getMessage()], 500);
+        }
+    }
 
     public function categories()
     {
