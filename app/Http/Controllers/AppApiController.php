@@ -20,11 +20,34 @@ class AppApiController extends Controller
         }
         return app_json($packs);
     }
+    public function packsTest(Request $request, Category $category = null)
+    {
+        if ($category) {
+            $packs = $category->packs()->with('photos')->get()->append(['fetured_image_thumbnail']);
+        } else {
+            $packs = Pack::with('photos')->get()->append(['fetured_image_thumbnail']);
+        }
+        return app_json($packs);
+    }
 
     public function packImages(Request $request, $pack)
     {
         try {
             $pack_eq = Pack::with('photos')->find($pack);
+            if ($pack_eq) {
+                //$pack_with_images = $pack_eq->with('photos')->first();
+                return app_json($pack_eq);
+            } else {
+                return response()->json(['status' => 'failure', 'message' => "Requested pack not found"], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failure', 'message' => "Requested pack not found"], 404);
+        }
+    }
+    public function packImagesTest(Request $request, $pack)
+    {
+        try {
+            $pack_eq = Pack::with('photos')->find($pack)->append(['fetured_image_thumbnail']);
             if ($pack_eq) {
                 //$pack_with_images = $pack_eq->with('photos')->first();
                 return app_json($pack_eq);

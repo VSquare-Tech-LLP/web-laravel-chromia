@@ -19,4 +19,10 @@ class Pack extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
+    public function getFeturedImageThumbnailAttribute()
+    {
+        $this->photos->append('thumbnail');
+        return str_replace('template_images', 'template_images/thumbnails', $this->fetured_image);
+    }
 }

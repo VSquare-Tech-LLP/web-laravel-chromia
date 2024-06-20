@@ -22,7 +22,6 @@ use Illuminate\Http\Request;
 // Route::post('/face-swap', [FaceSwapController::class, 'uploadImages']);
 // Route::post('/face-swap-results', [FaceSwapController::class, 'getResult']);
 Route::post('/face-swap', [FaceSwapController::class, 'goApiFaceSwap']);
-Route::post('/face-swap-test', [FaceSwapController::class, 'goApiFaceSwapTest']);
 Route::post('/face-swap-results', [FaceSwapController::class, 'goApiFaceSwapResults']);
 
 //** Not in use so closed. */
@@ -38,4 +37,9 @@ Route::get('/get-categories', [AppApiController::class, 'categories']);
 Route::get('/get-packs/{category?}', [AppApiController::class, 'packs']);
 Route::get('/get-pack-images/{pack?}', [AppApiController::class, 'packImages']);
 Route::get('/get-random-images', [AppApiController::class, 'getRandomImages']);
+
+// APP ver-2 updated urls
+Route::post('/face-swap-test', [FaceSwapController::class, 'goApiFaceSwapTest']);
 Route::get('/get-random-images-test', [AppApiController::class, 'getRandomImagesTest']);
+Route::get('/get-packs-test/{category?}', [AppApiController::class, 'packsTest']);
+Route::get('/get-pack-images-test/{pack?}', [AppApiController::class, 'packImagesTest']);
