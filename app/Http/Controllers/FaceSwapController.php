@@ -586,6 +586,7 @@ class FaceSwapController extends Controller
             $fileName = time() . basename($imageUrl);
             $manager = new ImageManager(new Driver());
             $image = $manager->read($imageData);
+            $addwatermark = false;
             if ($addwatermark == true) {
                 $watermark = $manager->read(Storage::disk('public')->path('/home/hyfi-ai-watermark.png'));
                 // resize image proportionally to 300px width
