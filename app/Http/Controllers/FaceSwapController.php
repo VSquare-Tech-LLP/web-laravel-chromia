@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\FaceSwapTask;
 use App\Models\Pack;
 use App\Models\Photo;
+use App\Models\SwapLog;
 use App\Services\GoApiService;
 use App\Services\ReplicateApi;
+use App\Services\SwapLogService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,7 +47,12 @@ class FaceSwapController extends Controller
 
             $goApiService = new GoApiService();
             $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
-
+            try {
+                $log = SwapLogService::addLog($request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid);
+                Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid]);
+            } catch (Exception $e) {
+                Log::info("image swap log could not be generated", ['error' => $e->getMessage()]);
+            }
             // Return the analysis result
             return app_json(['task_uuid' => $task_uuid]);
         } catch (Exception $e) {
@@ -82,7 +89,12 @@ class FaceSwapController extends Controller
             $sourceImgB64 = asset(Storage::url($sourceImage));
             $goApiService = new GoApiService();
             $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
-
+            try {
+                $log = SwapLogService::addLog($request->ip(), $sourceImgB64, $targetImgB64, $task_uuid);
+                Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid]);
+            } catch (Exception $e) {
+                Log::info("image swap log could not be generated", ['error' => $e->getMessage()]);
+            }
             // Return the analysis result
             return app_json(['task_uuid' => $task_uuid]);
         } catch (Exception $e) {
@@ -100,11 +112,17 @@ class FaceSwapController extends Controller
 
             if ($result && $result->status == "success") {
                 if ($request->has('watermark') && $request->watermark === "true") {
-                    Log::info("Generated with watermark = ", [$request->watermark]);
+                    //Log::info("Generated with watermark = ", [$request->watermark]);
                     $localImage = $this->storeLocaly($result->image, true);
                 } else {
                     $localImage = $this->storeLocaly($result->image);
-                    Log::info("Generated without watermark = ", [$request->watermark]);
+                    //Log::info("Generated without watermark = ", [$request->watermark]);
+                }
+                try {
+                    SwapLogService::updateResultLog($task_uuid, $localImage);
+                    Log::info("image swap log", ['task_id' => $task_uuid, 'image' => $localImage]);
+                } catch (Exception $e) {
+                    Log::info("image swap log could not be generated", ['error' => $e->getMessage()]);
                 }
             } elseif ($result && ($result->status == "processing" || $result->status == "starting")) {
                 return response()->json(['status' => "processing", 'message' => "Generating image..."], 200);
