@@ -26,6 +26,12 @@
         $logged_in_user->can('admin.access.user.change-password')
         )
         )
+        <li class="nav-title">@lang('Face Swap')</li>
+        
+        <li class="nav-item">
+            <x-utils.link :href="route('admin.swaplogs')" class="nav-link" :text="__('Swap Log')"
+                :active="activeClass(Route::is('admin.swaplogs'), 'active')" />
+        </li>
         <li class="nav-title">@lang('System')</li>
 
         <li class="nav-group {{ activeClass(Route::is('admin.auth.user.*') || Route::is('admin.auth.role.*'), 'open show') }}">

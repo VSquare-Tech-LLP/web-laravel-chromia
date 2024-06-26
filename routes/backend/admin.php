@@ -22,3 +22,4 @@ Route::get('categories/{category}/edit', [AppBackendController::class, 'editCate
 Route::post('categories/store', [AppBackendController::class, 'storeCategory'])->name('categories.store');
 Route::get('packs', [AppBackendController::class, 'showPacks'])->name('packs');
 Route::get('photos', [AppBackendController::class, 'showPhotos'])->name('photos');
+Route::get('swaplogs', [AppBackendController::class, 'swapLogs'])->name('swaplogs');

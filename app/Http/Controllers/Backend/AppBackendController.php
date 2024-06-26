@@ -93,4 +93,9 @@ class AppBackendController extends Controller
 
         return response()->json(['message' => 'Photo added successfully', 'photo' => $photo], 201);
     }
+
+    public function swapLogs()
+    {
+        return view('backend.swaplogs.index');
+    }
 }
