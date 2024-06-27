@@ -145,7 +145,7 @@ class SwapLogsTable extends DataTableComponent
       Column::make(__('Result'), 'swap_result')
         ->format(function ($value, $column, $row) {
           if (is_null($value)) {
-            return '<p>Not Genereted yet.</p>';
+            return '<p>Not Generated yet.</p>';
           }
           return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Result Image" width="100" height="100"></a>';
         })->html(),
