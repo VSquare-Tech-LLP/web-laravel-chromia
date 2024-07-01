@@ -11,7 +11,7 @@ class SwapLogService
   {
   }
 
-  public static function addLog($ip, $source, $target, $result_id, $device_id = null)
+  public static function addLog($ip, $source, $target, $result_id, $is_paid = false, $device_id = null)
   {
     $swapLog = SwapLog::create([
       'ip_address' => $ip,
@@ -19,6 +19,7 @@ class SwapLogService
       'swap_source' => $source,
       'swap_target' => $target,
       'swap_result_id' => $result_id,
+      'is_paid' => ($is_paid != false) ? true : false
     ]);
     return $swapLog;
   }

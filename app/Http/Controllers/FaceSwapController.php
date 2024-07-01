@@ -49,8 +49,9 @@ class FaceSwapController extends Controller
             $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
             try {
                 $device_id = $request->device_id ?? null;
-                $log = SwapLogService::addLog($request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $device_id);
-                Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $device_id]);
+                $is_paid = $request->is_paid ?? false;
+                $log = SwapLogService::addLog($request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $is_paid, $device_id);
+                Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $is_paid, $device_id]);
             } catch (Exception $e) {
                 Log::info("image swap log could not be generated", ['error' => $e->getMessage()]);
             }
@@ -92,8 +93,9 @@ class FaceSwapController extends Controller
             $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
             try {
                 $device_id = $request->device_id ?? null;
-                $log = SwapLogService::addLog($request->ip(), $sourceImgB64, $targetImgB64, $task_uuid, $device_id);
-                Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $device_id]);
+                $is_paid = $request->is_paid ?? false;
+                $log = SwapLogService::addLog($request->ip(), $sourceImgB64, $targetImgB64, $task_uuid, $is_paid, $device_id);
+                Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $is_paid, $device_id]);
             } catch (Exception $e) {
                 Log::info("image swap log could not be generated", ['error' => $e->getMessage()]);
             }

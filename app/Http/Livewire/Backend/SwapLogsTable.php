@@ -150,6 +150,15 @@ class SwapLogsTable extends DataTableComponent
           return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Result Image" width="100" height="100"></a>';
         })->html(),
       Column::make(__('Result Id'), 'swap_result_id'),
+      Column::make(__('Paid'), 'is_paid')->format(function ($row) {
+        return $row == 1 ? __('Paid') : __('Free');
+      })->searchable(function ($query, $term) {
+        if (strtolower($term) == 'paid') {
+          $query->where('is_paid', 1)->orWhere('is_paid', true);
+        } elseif (strtolower($term) == 'free') {
+          $query->Where('is_paid', false)->orwhere('is_paid', 0)->orWhereNull('is_paid');
+        }
+      }),
       // LinkColumn::make(__('E-mail'), 'email')
       //   ->title(fn ($row) => $row->email)
       //   ->location(fn ($row) => 'mailto:' . $row->eamil)
