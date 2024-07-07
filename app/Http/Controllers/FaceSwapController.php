@@ -49,7 +49,7 @@ class FaceSwapController extends Controller
             $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
             try {
                 $device_id = $request->device_id ?? null;
-                $is_paid = $request->is_paid ?? false;
+                $is_paid = ($request->is_paid && $request->is_paid == "true") ? true : false;
                 $log = SwapLogService::addLog($request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $is_paid, $device_id);
                 Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $is_paid, $device_id]);
             } catch (Exception $e) {
@@ -93,7 +93,7 @@ class FaceSwapController extends Controller
             $task_uuid = $goApiService->requestSwap($sourceImgB64, $targetImgB64);
             try {
                 $device_id = $request->device_id ?? null;
-                $is_paid = $request->is_paid ?? false;
+                $is_paid = ($request->is_paid && $request->is_paid == "true") ? true : false;
                 $log = SwapLogService::addLog($request->ip(), $sourceImgB64, $targetImgB64, $task_uuid, $is_paid, $device_id);
                 Log::info('image swap', [time(), $request->ip(), asset(Storage::url($sourceImage)), asset(Storage::url($targetImage)), $task_uuid, $is_paid, $device_id]);
             } catch (Exception $e) {
