@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('swap_logs', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->string('ip_address');
             $table->string('device_id')->nullable();
-            $table->string('swap_source')->nullable();
-            $table->string('swap_source_id')->nullable();
-            $table->string('swap_target')->nullable();
+            $table->string('prompt')->nullable();
+            $table->json('results')->nullable();
+            $table->json('settings')->nullable();
+            $table->boolean('is_paid')->nullable();
             $table->string('swap_result_id')->nullable();
-            $table->string('swap_result')->nullable();
             $table->timestamps();
         });
     }

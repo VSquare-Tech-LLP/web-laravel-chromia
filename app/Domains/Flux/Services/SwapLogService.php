@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Domains\Flux\Services;
 
-use App\Models\SwapLog;
+use App\Domains\Flux\Models\SwapLog;
 
 class SwapLogService
 {

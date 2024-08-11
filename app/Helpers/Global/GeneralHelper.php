@@ -15,6 +15,17 @@ if (!function_exists('appName')) {
         return config('app.name', 'Laravel Boilerplate');
     }
 }
+if (!function_exists('app_data')) {
+    /**
+     * Helper to grab the application name.
+     *
+     * @return mixed
+     */
+    function app_data($status = true, $data = null, $status_code = 200)
+    {
+        return response()->json(['status' => $status, 'data' => $data], $status_code);
+    }
+}
 
 if (!function_exists('carbon')) {
     /**
@@ -79,7 +90,7 @@ if (!function_exists('cdn_asset')) {
         }
     }
 }
-
+//Depricated
 if (!function_exists('app_json')) {
     function app_json($data, $status = 'success')
     {
