@@ -17,6 +17,9 @@ class FluxController extends Controller
         $defauts['num_outputs'] = $request->num_outputs ?? 4;
         $defauts['aspect_ratio'] = $request->aspect_ratio ?? '1:1';
         $defauts['output_format'] = $request->output_format ?? 'jpeg';
+        if($request->has('append') && $request->append!==''){
+            $defauts['prompt'] = $request->prompt . ' ' . $request->append;
+        }
         $body = $defauts;
         try{
             $raplicate = new ReplicateApi();
@@ -35,7 +38,6 @@ class FluxController extends Controller
         $id = $request->id;
         $raplicate = new ReplicateApi();
         $response = $raplicate->getResults($id);
-        ds($response);
         if($response && $response->output){
             $localimages = $this->storeLocaly($response->output);
             return app_data(true,$localimages);
