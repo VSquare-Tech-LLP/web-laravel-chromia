@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Backend;
 
 use App\Domains\Auth\Models\User;
-use App\Models\SwapLog;
+use App\Domains\Flux\Models\Log;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -16,7 +16,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 class SwapLogsTable extends DataTableComponent
 {
 
-  public string $tableName = 'swap_logs';
+  public string $tableName = 'logs';
 
   /**
    * @var
@@ -51,7 +51,7 @@ class SwapLogsTable extends DataTableComponent
    */
   public function builder(): Builder
   {
-    $query = SwapLog::query()->selectRaw('*');
+    $query = Log::query()->selectRaw('*');
 
     // if ($this->status === 'deleted') {
     //   $query = $query->onlyTrashed();
@@ -134,22 +134,30 @@ class SwapLogsTable extends DataTableComponent
         ->sortable(),
       Column::make(__('Device Id'), 'device_id')
         ->searchable(),
-      Column::make(__('Source'), 'swap_source')
+      Column::make(__('Prompt'), 'prompt')
+        ->searchable(),
+      Column::make(__('Settings'), 'settings')
         ->format(function ($value, $column, $row) {
-          return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Source Image" width="100" height="100"></a>';
+          // return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Targer Image" width="100" height="100"></a>';
+          $out = "<ul>";
+          foreach(json_decode($value,false) as $setting){
+            $out.='<li>'.$setting.'</li>';
+          } 
+          return $out.'</ul>';
         })->html(),
-      Column::make(__('Targer'), 'swap_target')
-        ->format(function ($value, $column, $row) {
-          return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Targer Image" width="100" height="100"></a>';
-        })->html(),
-      Column::make(__('Result'), 'swap_result')
+      Column::make(__('Results'), 'results')
         ->format(function ($value, $column, $row) {
           if (is_null($value)) {
             return '<p>Not Generated yet.</p>';
           }
-          return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Result Image" width="100" height="100"></a>';
+          // return '<a href="' . $value . '" target="_blank"><img src="' . $value . '" alt="Result Image" width="100" height="100"></a>';
+          $out ="";
+          foreach(json_decode($value) as $image) {
+            $out.= '<a href="' . $image . '" target="_blank"><img src="' . $image . '" alt="Result Image" width="100" height="100"></a>';
+          }
+          return $out;
         })->html(),
-      Column::make(__('Result Id'), 'swap_result_id'),
+      Column::make(__('Result Id'), 'result_id'),
       Column::make(__('Paid'), 'is_paid')->format(function ($row) {
         return $row == 1 ? __('Paid') : __('Free');
       })->searchable(function ($query, $term) {

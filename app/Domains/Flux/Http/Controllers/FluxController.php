@@ -2,6 +2,7 @@
 
 namespace App\Domains\Flux\Http\Controllers;
 
+use App\Domains\Flux\Services\LogService;
 use App\Domains\Flux\Services\ReplicateApi;
 use App\Http\Controllers\Controller;
 use Exception;
@@ -17,16 +18,22 @@ class FluxController extends Controller
         $defauts['num_outputs'] = $request->num_outputs ?? 4;
         $defauts['aspect_ratio'] = $request->aspect_ratio ?? '1:1';
         $defauts['output_format'] = $request->output_format ?? 'jpeg';
+        $settings = $defauts;
+        unset($settings['prompt']);
         if($request->has('append') && $request->append!==''){
-            $defauts['prompt'] = $request->prompt . ' ' . $request->append;
+            $defauts['prompt'] = $request->prompt . ', ' . $request->append;
+            $settings['append'] = $request->append;
         }
         $body = $defauts;
         try{
+            $log = new LogService();
             $raplicate = new ReplicateApi();
             $response = $raplicate->sendRequest($body);
             if($response && $response->id){
+                $log->addLog($request->ip(), $request->prompt, json_encode($settings), $response->id, $request->is_paid, $request->device_id);
                 return app_data(true,['id'=>$response->id]);
             }else{
+                $log->addLog($request->ip(), $request->prompt, $body, null, $request->is_paid, $request->device_id);
                 return app_data(false,null,200);
             }
         }catch(Exception $e){
@@ -36,10 +43,16 @@ class FluxController extends Controller
 
     public function getresults(Request $request){
         $id = $request->id;
+        $log = new LogService();
+        $hasLogged = $log->findLog($id);
+        if($hasLogged && $hasLogged->results){
+           return app_data(true,json_decode($hasLogged->results));
+        }
         $raplicate = new ReplicateApi();
         $response = $raplicate->getResults($id);
         if($response && $response->output){
             $localimages = $this->storeLocaly($response->output);
+            $log->updateResultLog($id, $localimages);
             return app_data(true,$localimages);
         }else{
             return app_data(false,null,200);

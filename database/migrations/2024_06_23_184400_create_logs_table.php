@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('ip_address');
             $table->string('device_id')->nullable();
-            $table->string('prompt')->nullable();
+            $table->string('prompt',3000)->nullable();
             $table->json('results')->nullable();
             $table->json('settings')->nullable();
             $table->boolean('is_paid')->nullable();
-            $table->string('swap_result_id')->nullable();
+            $table->string('result_id')->nullable();
             $table->timestamps();
         });
     }
