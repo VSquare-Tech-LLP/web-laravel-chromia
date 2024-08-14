@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Flux\Http\Controllers\AppController;
 use App\Domains\Flux\Http\Controllers\FluxController;
 use App\Http\Controllers\AppApiController;
 use App\Http\Controllers\FaceSwapController;
@@ -17,5 +18,6 @@ use Illuminate\Http\Request;
 */
 
 
+Route::post('/home', [AppController::class, 'home']);
 Route::post('/generate', [FluxController::class, 'generate']);
 Route::post('/get-results', [FluxController::class, 'getresults']);
