@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
 class AppController extends Controller
 {
     public function home(Request $request){
-        $photos = Photo::simplePaginate(10);
+        $photos = Photo::simplePaginate(env('PHOTOS_PER_PAGE',100));
         return app_data(true,$photos);
     }
 }
