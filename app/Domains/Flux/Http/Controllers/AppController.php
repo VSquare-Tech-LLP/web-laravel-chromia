@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
 class AppController extends Controller
 {
     public function home(Request $request){
-        $photos = Photo::select('id','url','prompt')->inRandomOrder()->get()->toArray();
+        $photos = Photo::select('id','url','prompt')->get()->toArray();
         return app_data(true,$photos);
     }
 }
