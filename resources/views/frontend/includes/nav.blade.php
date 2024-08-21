@@ -35,10 +35,10 @@
                     <a class="nav-link" href="{{ url('support') }}">{{ __('Support') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://face-swap.eyuva.xyz/storage/privacy-policy.pdf">{{ __('Privacy') }}</a>
+                    <a class="nav-link" href="https://flux.eyuva.xyz/storage/privacy-policy.pdf">{{ __('Privacy') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://face-swap.eyuva.xyz/storage/terms-of-use.pdf">{{ __('Terms & Conditions') }}</a>
+                    <a class="nav-link" href="https://flux.eyuva.xyz/storage/terms-of-use.pdf">{{ __('Terms & Conditions') }}</a>
                 </li>
                 @guest
 {{--                    @if (Route::has('frontend.auth.login'))--}}
