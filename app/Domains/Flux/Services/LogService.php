@@ -31,6 +31,12 @@ class LogService
     return $swapLog;
   }
 
+  public static function updateFailedStatus($uuid,$result)
+  {
+    $swapLog =  Log::where('result_id', $uuid)->first();
+    $swapLog->update(['results' => $result]);
+    return $swapLog;
+  }
   public function findLog($uuid)
   {
     return Log::where('result_id', $uuid)->first() ?? null;

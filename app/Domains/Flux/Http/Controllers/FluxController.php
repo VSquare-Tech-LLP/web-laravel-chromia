@@ -7,6 +7,7 @@ use App\Domains\Flux\Services\ReplicateApi;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class FluxController extends Controller
@@ -46,17 +47,32 @@ class FluxController extends Controller
         $log = new LogService();
         $hasLogged = $log->findLog($id);
         if($hasLogged && $hasLogged->results){
+            $results = json_decode($hasLogged->results);
+            if(is_array($results)){
+                return app_data(true,json_decode($hasLogged->results));
+            }elseif (!is_array($results) &&$results->status == 'failed'){
+               return app_data(false,$results,200);
+           } 
            return app_data(true,json_decode($hasLogged->results));
         }
         $raplicate = new ReplicateApi();
         $response = $raplicate->getResults($id);
-        if($response && $response->output){
-            $localimages = $this->storeLocaly($response->output);
-            $log->updateResultLog($id, $localimages);
-            return app_data(true,$localimages);
-        }else{
-            return app_data(false,null,200);
+        if($response && $response->status){
+            if($response->status === 'failed'){
+                $log->updateFailedStatus($id,['status'=>'failed','error'=>$response->error]);
+                return app_data(false,['status'=>'failed','error'=>$response->error],200);
+            }
+            if($response->output){
+                //Log::info(json_encode($response));
+                $localimages = $this->storeLocaly($response->output);
+                $log->updateResultLog($id, $localimages);
+                return app_data(true,$localimages);
+            }else{
+                //Log::info(json_encode($response));
+                return app_data(false,null,200);
+            }
         }
+        
     }
     
     public function storeLocaly($imageUrls, $addwatermark = false)
