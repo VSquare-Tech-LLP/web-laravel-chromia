@@ -30,11 +30,15 @@ class FluxController extends Controller
             $log = new LogService();
             $raplicate = new ReplicateApi();
             $response = $raplicate->sendRequest($body);
+            $plan = $request->plan ?? null;
+            $purchase_date = $request->purchase_date ?? null;
+            $device_id = $request->device_id ?? null;
+            $app_ver = $request->app_ver ?? null;
             if($response && $response->id){
-                $log->addLog($request->ip(), $request->prompt, json_encode($settings), $response->id, $request->is_paid, $request->device_id);
+                $log->addLog($request->ip(), $request->prompt, json_encode($settings), $response->id, $request->is_paid, $device_id, 'flux', $plan, $purchase_date,$app_ver);
                 return app_data(true,['id'=>$response->id]);
             }else{
-                $log->addLog($request->ip(), $request->prompt, $body, null, $request->is_paid, $request->device_id);
+                $log->addLog($request->ip(), $request->prompt, json_encode($settings), null, $request->is_paid, $request->device_id, 'flux', $plan, $purchase_date,$app_ver);
                 return app_data(false,null,200);
             }
         }catch(Exception $e){
@@ -52,7 +56,7 @@ class FluxController extends Controller
                 return app_data(true,json_decode($hasLogged->results));
             }elseif (!is_array($results) &&$results->status == 'failed'){
                return app_data(false,$results,200);
-           } 
+           }
            return app_data(true,json_decode($hasLogged->results));
         }
         $raplicate = new ReplicateApi();
@@ -72,9 +76,9 @@ class FluxController extends Controller
                 return app_data(false,null,200);
             }
         }
-        
+
     }
-    
+
     public function storeLocaly($imageUrls, $addwatermark = false)
     {
         $dir = 'results'; // Define your storage path
@@ -86,7 +90,7 @@ class FluxController extends Controller
                 Storage::disk('public')->put($dir . '/' . $fileName, $imageData);
                 $publicUrl = asset("storage/$dir/$fileName");
                 $publicUrls[] = $publicUrl;
-            } 
+            }
         }
         return $publicUrls;
     }
