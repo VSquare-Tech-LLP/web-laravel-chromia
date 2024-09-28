@@ -19,6 +19,7 @@ class FluxController extends Controller
         $defauts['num_outputs'] = $request->num_outputs ?? 4;
         $defauts['aspect_ratio'] = $request->aspect_ratio ?? '1:1';
         $defauts['output_format'] = $request->output_format ?? 'jpeg';
+        $defauts['disable_safety_checker'] = env('DISABLE_SAFETY_CHECKER', false);
         $settings = $defauts;
         unset($settings['prompt']);
         if($request->has('append') && $request->append!==''){
