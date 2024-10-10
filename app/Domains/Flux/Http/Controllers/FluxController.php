@@ -2,6 +2,7 @@
 
 namespace App\Domains\Flux\Http\Controllers;
 
+use App\Domains\Flux\Services\IpCheckerService;
 use App\Domains\Flux\Services\LogService;
 use App\Domains\Flux\Services\ReplicateApi;
 use App\Http\Controllers\Controller;
@@ -28,6 +29,11 @@ class FluxController extends Controller
         }
         $body = $defauts;
         try{
+            $ipChecker = new IpCheckerService($request->ip());
+            if($ipChecker->isApple){
+                $body['disable_safety_checker'] = false;
+            }
+
             $log = new LogService();
             $raplicate = new ReplicateApi();
             $response = $raplicate->sendRequest($body);
