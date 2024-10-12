@@ -45,8 +45,6 @@ class IpCheckerService
     $isApple = strpos($infoString, 'apple');
     if($isApple !== false){
       Log::info('Apple Device ip Found.', ['ip' => $this->ip]);
-    }else{
-      Log::info('Non Apple Device ip Found.', ['ip' => $this->ip]);
     }
     return $isApple !== false;
   }
