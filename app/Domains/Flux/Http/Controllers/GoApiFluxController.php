@@ -84,6 +84,10 @@ class GoApiFluxController extends Controller
                 $log->updateFailedStatus($id,['status'=>'failed','error'=>$response->data->error]);
                 return app_data(false,['status'=>'failed','error'=>$response->data->error],200);
             }
+            if($response->data->status === 'processing'){
+                //$log->updateFailedStatus($id,['status'=>'failed','error'=>$response->data->error]);
+                return app_data(true,[],200);
+            }
             if($response->data->output && $response->data->output->image_url){
                 //Log::info(json_encode($response->data));
                 $localimages = $this->storeLocaly([$response->data->output->image_url]);
