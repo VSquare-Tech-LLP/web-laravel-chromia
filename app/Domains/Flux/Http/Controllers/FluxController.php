@@ -6,6 +6,7 @@ use App\Domains\Flux\Services\IpCheckerService;
 use App\Domains\Flux\Services\LogService;
 use App\Domains\Flux\Services\ReplicateApi;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -38,7 +39,7 @@ class FluxController extends Controller
             $raplicate = new ReplicateApi();
             $response = $raplicate->sendRequest($body);
             $plan = $request->plan ?? null;
-            $purchase_date = $request->purchase_date ?? null;
+            $purchase_date = ($request->purchase_date)? $this->parseDate($request->purchase_date) : null;
             $device_id = $request->device_id ?? null;
             $app_ver = $request->app_ver ?? null;
             if($response && $response->id){
@@ -100,5 +101,19 @@ class FluxController extends Controller
             }
         }
         return $publicUrls;
+    }
+
+    function parseDate($dateInput) {
+        try{
+        $date = Carbon::parse($dateInput);
+            // Check if the year is out of the reasonable range
+            if ($date->year < 1900 || $date->year > 2050) {
+                // Set the year to 2035 if out of range
+                $date->year = 2035;
+            }
+            return $date->toDateTimeString();
+        }catch(Exception $e){
+            return null;
+        }
     }
 }
