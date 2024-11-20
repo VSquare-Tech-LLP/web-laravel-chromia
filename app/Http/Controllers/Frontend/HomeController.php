@@ -21,7 +21,8 @@ class HomeController
      */
     public function index()
     {
-        return view('frontend.index');
+        //return view('frontend.index');
+        return view('frontend.pages.coming-soon');
     }
     public function getContactUs()
     {
