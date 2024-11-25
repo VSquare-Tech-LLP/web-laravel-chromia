@@ -74,6 +74,9 @@ class FluxController extends Controller
                 $log->updateFailedStatus($id,['status'=>'failed','error'=>$response->error]);
                 return app_data(false,['status'=>'failed','error'=>$response->error],200);
             }
+            if($response->status == 'processing'){
+                return app_data(true,[],200);
+            }
             if($response->output){
                 //Log::info(json_encode($response));
                 $localimages = $this->storeLocaly($response->output);
@@ -83,6 +86,9 @@ class FluxController extends Controller
                 //Log::info(json_encode($response));
                 return app_data(false,null,200);
             }
+        }else{
+            Log::info(json_encode($response));
+            return app_data(true,[],200);
         }
 
     }
