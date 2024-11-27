@@ -15,4 +15,9 @@ class Photo extends Model
         return str_replace('source_images', 'source_thumbs', $this->url);
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
 }

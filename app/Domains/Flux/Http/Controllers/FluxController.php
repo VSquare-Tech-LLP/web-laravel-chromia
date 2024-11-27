@@ -83,11 +83,9 @@ class FluxController extends Controller
                 $log->updateResultLog($id, $localimages);
                 return app_data(true,$localimages);
             }else{
-                //Log::info(json_encode($response));
                 return app_data(false,null,200);
             }
         }else{
-            Log::info(json_encode($response));
             return app_data(true,[],200);
         }
 
