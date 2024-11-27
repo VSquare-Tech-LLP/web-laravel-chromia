@@ -31,7 +31,7 @@ class ImportAllDrawings extends Command
         // Load prompts from the CSV
         $this->loadPromptsFromCSV();
 
-        $sourceDirectory = 'ALL_DRAWIG';
+        $sourceDirectory = 'ALL_DRAWING';
         $destinationDirectory = 'source_images';
 
         $files = $this->traverseDirectory($sourceDirectory);
