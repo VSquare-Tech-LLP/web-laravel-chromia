@@ -23,11 +23,35 @@ class FluxController extends Controller
         $defauts['output_format'] = $request->output_format ?? 'jpeg';
         $defauts['disable_safety_checker'] = env('DISABLE_SAFETY_CHECKER', false);
         $settings = $defauts;
+
+        $sketch_level = $request->level ?? 'medium';
+
         unset($settings['prompt']);
-        if($request->has('append') && $request->append!==''){
+
+        $custom_sketch_prompt = env('CUSTOM_SKETCH_PROMPT');
+
+        switch($sketch_level){
+            case 'easy':
+                $sketch_level_prompt = env('EASY_SKETCH_PROMPT');
+                break;  
+            case 'hard':
+                $sketch_level_prompt = env('HARD_SKETCH_PROMPT');
+                break;         
+            default:
+                $sketch_level_prompt = env('MEDIUM_SKETCH_PROMPT');
+                break;      
+        }
+
+
+        if($request->has('append') && trim($request->append)!==''){
             $defauts['prompt'] = $request->prompt . ', ' . $request->append;
             $settings['append'] = $request->append;
+        }else{
+            //$defauts['prompt'] = $request->prompt . ', high-contrast minimal line art, precise black lines on white background, clean vector-like quality, professional illustration style, sharp detailed outlines, no shading, continuous smooth strokes, minimalist aesthetic, technical drawing precision';    
+            
+            $defauts['prompt'] = $request->prompt . $custom_sketch_prompt.$sketch_level_prompt;    
         }
+    
         $body = $defauts;
         try{
             $ipChecker = new IpCheckerService($request->ip());
