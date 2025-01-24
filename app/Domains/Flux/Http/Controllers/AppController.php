@@ -75,7 +75,24 @@ class AppController extends Controller
 
     }
 
-    public function categoryPhotos(){
+    public function categoryPhotos(Request $request){
+        $category_id = $request->category_id;
+        $offset = $request->offset;
+
+        $data = [];
+
+        $photos = DB::table("photos")
+                    ->select('photos.id','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
+                    ->leftJoin('categories', 'categories.id', '=', 'photos.category_id')
+                    ->where("category_id",$category_id)
+                    ->offset($offset)->limit(5)->get();
+                    
+        $next_offset = ($offset + 5);
+
+        $data['next_offset'] = $next_offset;
+        $data['photos'] = $photos;
+
+        return app_data(true,$data);     
 
     }
 }

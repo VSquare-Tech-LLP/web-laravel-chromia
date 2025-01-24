@@ -32,3 +32,5 @@ if (env('USE_API', "replicate") == "replicate") {
 }
 Route::post('/generate-test', [FluxController::class, 'generate']);
 Route::post('/get-results-test', [FluxController::class, 'getresults']);
+
+Route::post('/morePhotos', [AppController::class, 'categoryPhotos']);
