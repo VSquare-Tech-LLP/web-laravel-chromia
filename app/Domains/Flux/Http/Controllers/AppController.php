@@ -8,11 +8,15 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\DB;
 
 
 class AppController extends Controller
 {
-    public function home(Request $request){
+    public function home_old(Request $request){
+
+        $catwisedata = [];
+
         $photos = Photo::select('id','url','prompt','category_id')
         ->with('category')
         ->get()->map(function ($photo) {
@@ -25,6 +29,53 @@ class AppController extends Controller
                 'category_name' => $photo->category->name, // Include only the category name
             ];
         });
+
+        /* foreach($photos as $item){
+            if(!in_array($item['category_name'],$catwisedata)){
+                $catwisedata[] = $item['category_name'];
+            }
+                 
+        } */
+        foreach($photos as $item){
+            $catname = $item['category_name'];
+            $catwisedata[$catname][] = [
+                'id' => $item['id'],
+                'url' => $item['url'],
+                'prompt' => $item['prompt'],
+            ];     
+        }
+
         return app_data(true,$photos);
+        //return app_data(true,$catwisedata);
+    }
+
+    public function home(Request $request){
+        
+        $catwisedata = [];
+
+        $categories = DB::table("categories")->get();
+        foreach($categories as $item){
+            $data = [];
+            $data = [
+                'id'=>$item->id,
+                'category_name'=>$item->name,
+            ];
+
+            $photos = DB::table("photos")
+                        ->select('photos.id','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
+                        ->leftJoin('categories', 'categories.id', '=', 'photos.category_id')
+                        ->where("category_id",$item->id)
+                        ->offset(0)->limit(5)->get();
+
+            $data['photos'] = $photos;
+            $catwisedata[] = $data;
+        }
+
+        return app_data(true,$catwisedata);     
+
+    }
+
+    public function categoryPhotos(){
+
     }
 }
