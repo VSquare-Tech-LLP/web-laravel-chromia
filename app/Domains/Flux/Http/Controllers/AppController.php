@@ -77,9 +77,12 @@ class AppController extends Controller
 
     public function categoryPhotos(Request $request){
         $category_id = $request->category_id;
+        $offset=0;
         $offset = $request->offset;
 
         $data = [];
+
+        $total_photos = DB::table("photos")->where("category_id",$category_id)->count();
 
         $photos = DB::table("photos")
                     ->select('photos.id','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
@@ -88,6 +91,9 @@ class AppController extends Controller
                     ->offset($offset)->limit(10)->get();
 
         $next_offset = ($offset + 10);
+        if($next_offset > $total_photos){
+            $next_offset=$offset;
+        }
 
         $data['next_offset'] = $next_offset;
         $data['photos'] = $photos;
