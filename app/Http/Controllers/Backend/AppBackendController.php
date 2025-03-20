@@ -9,6 +9,9 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
+
 
 class AppBackendController extends Controller
 {
@@ -28,18 +31,37 @@ class AppBackendController extends Controller
     public function storeCategory(Request $request)
     {
 
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            //$fileInfo = pathinfo($file);
+            //$extension = $fileInfo['extension'];
+            
+            $imagePath = storage_path("category");
+            $extension = $file->getClientOriginalExtension();
+            $new_filename = Str::random(10).".".$extension;
+            $file->storeAs('category',$new_filename,'public');
+            
+        }
+
         if ($request->has('category_id')) {
             $validatedData = $request->validate([
                 'name' => 'required|string|unique:categories,name,' . $request->category_id,
             ]);
             $category = Category::find($request->category_id);
             $category->update($validatedData);
+            $category->image = $new_filename;
+            $category->save();
             return redirect()->back()->withType('success')->withMessage("Category updated successfully");
         }
         $validatedData = $request->validate([
             'name' => 'required|string|unique:categories,name',
         ]);
+
         $category = Category::create($validatedData);
+        $category->image = $new_filename;
+        $category->save();
+
         return redirect()->route('admin.categories.index')->withFlashSuccess("Category added successfully");
     }
 

@@ -3,7 +3,7 @@
 @section('title', __('Manage Categories'))
 
 @section('content')
-<x-forms.post :action="route('admin.categories.store')">
+<x-forms.post :action="route('admin.categories.store')" enctype="multipart/form-data" >
     <x-backend.card>
         <x-slot name="header">
             @lang('Manage Categories')
@@ -18,13 +18,28 @@
                     @endif
                 </div>
             </div>
+
+
+            <div class="mb-3 row">
+                <label for="name" class="col-md-2 col-form-label">@lang('Category Name')</label>
+                <div class="col-md-10">
+                    <input type="file" name="image" class="form-control" />
+                    @if(isset($category) && $category)
+                    <input type="hidden" name="old_image" value="{{ $category->image }}">
+                    @endif
+                </div>
+            </div>
+            
             <!-- Add any additional fields for category management here -->
 
             <!-- Display existing categories for editing -->
             <h5>Existing Categories:</h5>
             <ul>
                 @foreach($categories as $category)
-                <li class="pt-2 pb-2" >{{ $category->name }} - <a class="btn btn-secondary btn-sm" href="{{ route('admin.categories.edit', $category->id) }}">Edit</a>
+                <li class="pt-2 pb-2" >
+                    {{ $category->name }} - 
+                    <img src="{{ url('storage/category/'.$category->image) }}"  width="70" alt=" " />
+                    <a class="btn btn-secondary btn-sm" href="{{ route('admin.categories.edit', $category->id) }}">Edit</a>
                     <a class="btn btn-danger btn-sm" href="{{ route('admin.category.delete', $category->id) }}">Delete</a>
                 </li>
                 @endforeach
