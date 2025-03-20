@@ -24,7 +24,9 @@
             <h5>Existing Categories:</h5>
             <ul>
                 @foreach($categories as $category)
-                <li>{{ $category->name }} - <a href="{{ route('admin.categories.edit', $category->id) }}">Edit</a><a href="{{ route('admin.categories.delete', $category->id) }}">Delete</a></li>
+                <li class="pt-2 pb-2" >{{ $category->name }} - <a class="btn btn-secondary btn-sm" href="{{ route('admin.categories.edit', $category->id) }}">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="{{ route('admin.category.delete', $category->id) }}">Delete</a>
+                </li>
                 @endforeach
             </ul>
         </x-slot>

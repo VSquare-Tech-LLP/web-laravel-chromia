@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Domains\Flux\Models\Category;
 use App\Models\Pack;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class AppBackendController extends Controller
 {
@@ -98,4 +99,12 @@ class AppBackendController extends Controller
     {
         return view('backend.swaplogs.index');
     }
+
+
+    public function deleteCat($catid=0)
+    {
+        DB::table("categories")->where('id',$catid)->delete();
+        return redirect()->route('admin.categories.index')->withFlashSuccess("Category deleted successfully");
+    }
+
 }

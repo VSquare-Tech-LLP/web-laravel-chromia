@@ -23,3 +23,7 @@ Route::post('categories/store', [AppBackendController::class, 'storeCategory'])-
 Route::get('packs', [AppBackendController::class, 'showPacks'])->name('packs');
 Route::get('photos', [AppBackendController::class, 'showPhotos'])->name('photos');
 Route::get('swaplogs', [AppBackendController::class, 'swapLogs'])->name('swaplogs');
+
+
+Route::get('category/delete/{id}', [AppBackendController::class, 'deleteCat'])->name('category.delete');
+
