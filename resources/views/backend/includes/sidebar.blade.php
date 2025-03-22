@@ -97,6 +97,9 @@
                 <li class="nav-item">
                     <x-utils.link :href="route('log-viewer::logs.list')" class="nav-link" :text="__('Packs')" />
                 </li>
+                <li class="nav-item">
+                    <x-utils.link :href="route('admin.images.index')" class="nav-link" :text="__('Images')" />
+                </li>
             </ul>
         </li>
         @endif

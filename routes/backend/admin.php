@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\AppBackendController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\ImageController;
 use Tabuna\Breadcrumbs\Trail;
 
 // All route names are prefixed with 'admin.'.
@@ -26,4 +27,8 @@ Route::get('swaplogs', [AppBackendController::class, 'swapLogs'])->name('swaplog
 
 
 Route::get('category/delete/{id}', [AppBackendController::class, 'deleteCat'])->name('category.delete');
+
+
+
+Route::resource('images', ImageController::class);
 
