@@ -31,6 +31,7 @@ class AppBackendController extends Controller
     public function storeCategory(Request $request)
     {
 
+        $new_filename = '';
         if ($request->hasFile('image')) {
             $file = $request->file('image');
 
