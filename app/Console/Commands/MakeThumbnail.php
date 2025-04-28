@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\JpegEncoder;
+use Illuminate\Support\Facades\DB;
 
 class MakeThumbnail extends Command
 {
@@ -36,8 +37,21 @@ class MakeThumbnail extends Command
         $files = Storage::files($dir);
         $manager = new ImageManager(new Driver());
         foreach ($files as $template_image) {
+            $this->line($template_image);
             $thumbDir = 'thumbnails';
-            $scaledPath = (Storage::path($dir) . '/' . $thumbDir . '/' . $this->getEndName($template_image));
+            $pathInfo =  pathinfo($this->getEndName($template_image));
+            $new_filename = $pathInfo['filename'];
+            $org_filename = basename($this->getEndName($template_image));
+            $extension = $pathInfo['extension'];;
+            $thumb_name='';
+            if(in_array($extension,['jpg','png','jpeg'])){
+                //dd($new_filename,$org_filename,$extension);
+                $thumb_name = $new_filename.'_200x200.'.$extension;
+            }
+            
+            //$scaledPath = (Storage::path($dir) . '/' . $thumbDir . '/' . $this->getEndName($template_image));
+            $scaledPath = (Storage::path($dir) . '/' . $thumbDir . '/' . $thumb_name);
+            
             if (!Storage::exists($dir . '/' . $thumbDir)) {
                 Storage::makeDirectory($dir . '/' . $thumbDir);
             }
@@ -51,6 +65,11 @@ class MakeThumbnail extends Command
                 $image->scale(height: 200);
                 $image->encode(new JpegEncoder(quality: 60))->save($scaledPath);
                 $this->line("image is compressed : " . $scaledPath);
+                if(in_array($extension,['jpg','png','jpeg'])){
+                    DB::table("photos")->where('name',$org_filename)->update(['thumbnail'=>$thumb_name]);
+                }
+                
+                
                 // } else {
                 //     $this->line("image is fine :" . $dir . '/' . $template_image);
                 // }

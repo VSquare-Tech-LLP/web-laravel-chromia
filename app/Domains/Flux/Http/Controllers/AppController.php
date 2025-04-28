@@ -62,12 +62,12 @@ class AppController extends Controller
             ];
 
             $photos = DB::table("photos")
-                        ->select('photos.id','photos.name','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
+                        ->select('photos.id','photos.name','photos.thumbnail','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
                         ->leftJoin('categories', 'categories.id', '=', 'photos.category_id')
                         ->where("category_id",$item->id)
                         ->offset(0)->limit(5)->get();
             foreach($photos as $item){
-                $item->thumbnail = url("storage/source_images/thumbnails/".$item->name);
+                $item->thumbnail = url("storage/source_images/thumbnails/".$item->thumbnail);
             }
 
             $data['photos'] = $photos;
