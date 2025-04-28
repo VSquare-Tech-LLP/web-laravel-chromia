@@ -21,12 +21,31 @@
 
 
             <div class="mb-3 row">
-                <label for="name" class="col-md-2 col-form-label">@lang('Category Name')</label>
+                <label for="name" class="col-md-2 col-form-label">@lang('Image')</label>
                 <div class="col-md-10">
                     <input type="file" name="image" class="form-control" />
                     @if(isset($category) && $category)
                     <input type="hidden" name="old_image" value="{{ $category->image }}">
                     @endif
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="name" class="col-md-2 col-form-label">@lang('Is Featured')</label>
+                <div class="col-md-10">
+                    
+                    <input type="radio" name="featured" id="featured" value="1" {{ isset($category) && $category->featured == 1 ? 'checked' : '' }} /> Yes
+                    <input type="radio" name="featured" id="featured" value="0" {{ isset($category) && $category->featured == 1 ? '' : 'checked' }}  /> No
+                    
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="name" class="col-md-2 col-form-label">@lang('Category Name')</label>
+                <div class="col-md-10">
+                   
+                    <textarea class="form-control" rows="7" name="description" >@if(isset($category) && $category) {{ $category->description }} @endif</textarea>
+                   
                 </div>
             </div>
             

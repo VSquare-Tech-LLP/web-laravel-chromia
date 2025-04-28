@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->bigInteger('category_id')->nullable();
             $table->string('prompt',3000);
             $table->string('url',300);

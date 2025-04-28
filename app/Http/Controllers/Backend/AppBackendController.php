@@ -50,6 +50,10 @@ class AppBackendController extends Controller
                 'name' => 'required|string|unique:categories,name,' . $request->category_id,
             ]);
             $category = Category::find($request->category_id);
+            $description = $request->description;
+            $featured = $request->featured;
+            $validatedData['description'] = $description;
+            $validatedData['featured'] = $featured;
             $category->update($validatedData);
             $category->image = $new_filename;
             $category->save();
@@ -59,6 +63,10 @@ class AppBackendController extends Controller
             'name' => 'required|string|unique:categories,name',
         ]);
 
+        $description = $request->description;
+        $featured = $request->featured;
+        $validatedData['description'] = $description;
+        $validatedData['featured'] = $featured;
         $category = Category::create($validatedData);
         $category->image = $new_filename;
         $category->save();
