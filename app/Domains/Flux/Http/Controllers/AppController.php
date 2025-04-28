@@ -59,6 +59,8 @@ class AppController extends Controller
             $data = [
                 'id'=>$item->id,
                 'category_name'=>$item->name,
+                'featured'=>$item->featured == 1 ? true : false,
+                'description'=>$item->description,
             ];
 
             $photos = DB::table("photos")
