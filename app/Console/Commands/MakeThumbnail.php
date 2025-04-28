@@ -31,7 +31,8 @@ class MakeThumbnail extends Command
      */
     public function handle()
     {
-        $dir = 'public/template_images';
+        //$dir = 'public/template_images';
+        $dir = 'public/source_images';
         $files = Storage::files($dir);
         $manager = new ImageManager(new Driver());
         foreach ($files as $template_image) {
@@ -46,6 +47,8 @@ class MakeThumbnail extends Command
                 //if ($width > 1024 || $height > 1024) {
                 $image = $manager->read(Storage::path($template_image));
                 //$image->scale(width: 1024);
+                $image->scale(width: 200);
+                $image->scale(height: 200);
                 $image->encode(new JpegEncoder(quality: 60))->save($scaledPath);
                 $this->line("image is compressed : " . $scaledPath);
                 // } else {
