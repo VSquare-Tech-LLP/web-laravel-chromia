@@ -88,13 +88,13 @@ class AppController extends Controller
         $total_photos = DB::table("photos")->where("category_id",$category_id)->count();
 
         $photos = DB::table("photos")
-                    ->select('photos.id','photos.name','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
+                    ->select('photos.id','photos.name','photos.thumbnail','photos.url','photos.prompt','categories.id as category_id','categories.name as category_name')
                     ->leftJoin('categories', 'categories.id', '=', 'photos.category_id')
                     ->where("category_id",$category_id)
                     ->offset($offset)->limit(10)->get();
          
         foreach($photos as $item){
-            $item->thumbnail = url("storage/source_images/thumbnails/".$item->name);
+            $item->thumbnail = url("storage/source_images/thumbnails/".$item->thumbnail);
         }                    
 
         $next_offset = ($offset + 10);
