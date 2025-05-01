@@ -41,7 +41,7 @@
             </div>
 
             <div class="mb-3 row">
-                <label for="name" class="col-md-2 col-form-label">@lang('Category Name')</label>
+                <label for="name" class="col-md-2 col-form-label">@lang('Description')</label>
                 <div class="col-md-10">
                    
                     <textarea class="form-control" rows="7" name="description" >@if(isset($category) && $category) {{ $category->description }} @endif</textarea>

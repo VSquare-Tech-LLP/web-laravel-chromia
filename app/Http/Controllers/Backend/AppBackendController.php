@@ -55,7 +55,10 @@ class AppBackendController extends Controller
             $validatedData['description'] = $description;
             $validatedData['featured'] = $featured;
             $category->update($validatedData);
-            $category->image = $new_filename;
+            if ($request->hasFile('image')) {
+                $category->image = $new_filename;
+            }
+            
             $category->save();
             return redirect()->back()->withType('success')->withMessage("Category updated successfully");
         }
