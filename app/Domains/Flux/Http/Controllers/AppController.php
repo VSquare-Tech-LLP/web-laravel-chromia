@@ -56,9 +56,17 @@ class AppController extends Controller
         $categories = DB::table("categories")->get();
         foreach($categories as $item){
             $data = [];
+
+            $cat_image = '';
+            $image_path = storage_path('app/public/category/'.$item->image);
+            if(trim($item->image) != '' && file_exists($image_path)){
+                $cat_image = url("storage/category/".$item->image);
+            }
+
             $data = [
                 'id'=>$item->id,
                 'category_name'=>$item->name,
+                'image'=> $cat_image,
                 'featured'=>$item->featured == 1 ? true : false,
                 'description'=>$item->description,
             ];
