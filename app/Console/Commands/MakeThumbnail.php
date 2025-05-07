@@ -42,11 +42,11 @@ class MakeThumbnail extends Command
             $pathInfo =  pathinfo($this->getEndName($template_image));
             $new_filename = $pathInfo['filename'];
             $org_filename = basename($this->getEndName($template_image));
-            $extension = $pathInfo['extension'];;
+            $extension = $pathInfo['extension'];
             $thumb_name='';
             if(in_array($extension,['jpg','png','jpeg'])){
                 //dd($new_filename,$org_filename,$extension);
-                $thumb_name = $new_filename.'_200x200.'.$extension;
+                $thumb_name = $new_filename.'_400x400.'.$extension;
             }
             
             //$scaledPath = (Storage::path($dir) . '/' . $thumbDir . '/' . $this->getEndName($template_image));
@@ -61,8 +61,8 @@ class MakeThumbnail extends Command
                 //if ($width > 1024 || $height > 1024) {
                 $image = $manager->read(Storage::path($template_image));
                 //$image->scale(width: 1024);
-                $image->scale(width: 200);
-                $image->scale(height: 200);
+                $image->scale(width: 400);
+                $image->scale(height: 400);
                 $image->encode(new JpegEncoder(quality: 60))->save($scaledPath);
                 $this->line("image is compressed : " . $scaledPath);
                 if(in_array($extension,['jpg','png','jpeg'])){
